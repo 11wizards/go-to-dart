@@ -1,0 +1,92 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'everything.g.dart';
+
+@JsonSerializable()
+class Parent {
+	final String id;
+	final int number1;
+	final List<int> number2;
+	final int? number3;
+	final List<int>? number4;
+	final List<int?> number5;
+	final int? number6;
+	final List<int?> number7;
+	final String text1;
+	final List<String> text2;
+	final String? text3;
+	final List<String>? text4;
+	final List<String?> text5;
+	final String? text6;
+	final List<String?> text7;
+	final DateTime date1;
+	final List<DateTime> date2;
+	final DateTime? date3;
+	final List<DateTime>? date4;
+	final List<DateTime?> date5;
+	final String? date6;
+	final List<String?> date7;
+	final Child child1;
+	final List<Child> child2;
+	final Child? child3;
+	final List<Child>? child4;
+	final List<Child?> child5;
+	final Child? child6;
+	final List<Child?> child7;
+	final Map<String, double> map1;
+	@JsonKey(name: 'map2_weird_name') final Map<int, Child> map2;
+	
+	Parent({
+		required this.id,
+		required this.number1,
+		required this.number2,
+		this.number3,
+		this.number4,
+		required this.number5,
+		this.number6,
+		required this.number7,
+		required this.text1,
+		required this.text2,
+		this.text3,
+		this.text4,
+		required this.text5,
+		this.text6,
+		required this.text7,
+		required this.date1,
+		required this.date2,
+		this.date3,
+		this.date4,
+		required this.date5,
+		this.date6,
+		required this.date7,
+		required this.child1,
+		required this.child2,
+		this.child3,
+		this.child4,
+		required this.child5,
+		this.child6,
+		required this.child7,
+		required this.map1,
+		required this.map2,
+	});
+	
+	Map<String, dynamic> toJson() => _$ParentToJson(this);
+	
+	factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
+}
+
+@JsonSerializable()
+class Child {
+	final int id;
+	final String name;
+	
+	Child({
+		required this.id,
+		required this.name,
+	});
+	
+	Map<String, dynamic> toJson() => _$ChildToJson(this);
+	
+	factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
+}
+
