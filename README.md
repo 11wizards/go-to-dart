@@ -7,6 +7,7 @@ Go-to-dart helps you convert Go structs to Dart classes that can be used with [j
 - Supports only structs in the same package (no generics or embedded structs yet)
 - Supports primitives, slices, maps, and pointers
 - Support some other arbitrary types such as `time.Time` and `mo.Option` (easy to extend!)
+- Support for `json` tags
 
 Need something more? Please open an issue or even better, a PR!
 
