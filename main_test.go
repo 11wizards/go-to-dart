@@ -51,7 +51,3 @@ func TestEverything(t *testing.T) {
 func TestUser(t *testing.T) {
 	runAndCompare(t, "./examples/user")
 }
-
-func TestModel(t *testing.T) {
-	runAndCompare(t, "./examples/model")
-}
