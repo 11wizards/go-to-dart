@@ -41,5 +41,5 @@ type Parent struct {
 	Child7 []mo.Option[Child] `json:"child7"`
 
 	Map1 map[string]float64 `json:"map1"`
-	Map2 map[ChildID]Child  `json:"map2_weird_name"`
+	Map2 map[ChildID]Child  `json:"map2_weird_name,omitempty"`
 }

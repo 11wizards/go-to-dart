@@ -22,7 +22,7 @@ func GetJSONFieldName(f *ast.Field) string {
 		val := reflect.StructTag(strings.Trim(f.Tag.Value, "`"))
 		tag, ok := val.Lookup("json")
 		if ok {
-			return tag
+			return strings.Split(tag, ",")[0]
 		}
 	}
 
