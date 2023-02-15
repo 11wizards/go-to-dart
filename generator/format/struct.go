@@ -29,6 +29,10 @@ func (f *StructFormatter) Signature(expr ast.Expr) string {
 	return u.Name.Name
 }
 
+func (f *StructFormatter) Attribute(_ ast.Expr) string {
+	return ""
+}
+
 func (f *StructFormatter) Declaration(fieldName string, expr ast.Expr) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }

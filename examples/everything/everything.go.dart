@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'everything.g.dart';
+part 'everything.go.g.dart';
 
 @JsonSerializable()
 class Child {
@@ -49,7 +49,8 @@ class Parent {
 	final Child? child6;
 	final List<Child?> child7;
 	final Map<String, double> map1;
-	@JsonKey(name: 'map2_weird_name') final Map<int, Child> map2;
+	@JsonKey(name: 'map2_weird_name')
+	final Map<int, Child> map2;
 	
 	Parent({
 		required this.id,

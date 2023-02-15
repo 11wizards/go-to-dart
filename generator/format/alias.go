@@ -29,6 +29,10 @@ func (f *AliasFormatter) Signature(expr ast.Expr) string {
 	return f.Registry.GetTypeFormatter(u).Signature(u)
 }
 
+func (f *AliasFormatter) Attribute(_ ast.Expr) string {
+	return ""
+}
+
 func (f *AliasFormatter) Declaration(fieldName string, expr ast.Expr) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }

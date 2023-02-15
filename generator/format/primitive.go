@@ -60,6 +60,10 @@ func (f *PrimitiveFormatter) Signature(expr ast.Expr) string {
 	return f.toDartPrimitive(expr)
 }
 
+func (f *PrimitiveFormatter) Attribute(_ ast.Expr) string {
+	return ""
+}
+
 func (f *PrimitiveFormatter) Declaration(fieldName string, expr ast.Expr) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }

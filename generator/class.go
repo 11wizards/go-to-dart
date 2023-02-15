@@ -3,14 +3,15 @@ package generator
 import (
 	"fmt"
 	"github.com/11wizards/go-to-dart/generator/format"
+	"github.com/11wizards/go-to-dart/generator/options"
 	"github.com/openconfig/goyang/pkg/indent"
 	"go/ast"
 	"io"
 )
 
-func generateFields(wr io.Writer, st *ast.StructType, registry *format.TypeFormatterRegistry) {
+func generateFields(wr io.Writer, st *ast.StructType, registry *format.TypeFormatterRegistry, mode options.Mode) {
 	for _, f := range st.Fields.List {
-		generateFieldDeclaration(wr, f, registry)
+		generateFieldDeclaration(wr, f, registry, mode)
 		fmt.Fprintln(wr, ";")
 	}
 	fmt.Fprintln(wr)
@@ -37,19 +38,21 @@ func generateDeserialization(wr io.Writer, ts *ast.TypeSpec) {
 	fmt.Fprintf(wr, "factory %s.fromJson(Map<String, dynamic> json) => _$%sFromJson(json);\n", ts.Name, ts.Name)
 }
 
-func generateDartClass(outputFile io.Writer, ts *ast.TypeSpec, st *ast.StructType, registry *format.TypeFormatterRegistry) bool {
+func generateDartClass(outputFile io.Writer, ts *ast.TypeSpec, st *ast.StructType, registry *format.TypeFormatterRegistry, mode options.Mode) {
 	fmt.Fprintln(outputFile, "@JsonSerializable()")
+	if mode == options.Firestore {
+		fmt.Fprintln(outputFile, "@_TimestampConverter()")
+	}
+
 	fmt.Fprintf(outputFile, "class %s {\n", ts.Name)
 
 	wr := indent.NewWriter(outputFile, "\t")
 
-	generateFields(wr, st, registry)
+	generateFields(wr, st, registry, mode)
 	generateConstructor(wr, ts, st, registry)
 	generateSerialization(wr, ts)
 	generateDeserialization(wr, ts)
 
 	fmt.Fprintln(outputFile, "}")
 	fmt.Fprintln(outputFile, "")
-
-	return false
 }

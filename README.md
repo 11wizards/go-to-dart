@@ -21,8 +21,14 @@ The above command will install go-to-dart in your `$GOPATH/bin` directory. Make 
 
 ## Usage
 
+For plain JSON serialization, you can use the `json` mode.
 ```bash
-go-to-dart -i ./examples/user -o ./examples/user
+go-to-dart -i ./examples/user -o ./examples/user -m json
+```
+
+For serialization that works with Firestore, you can use the `firestore` mode.
+```bash
+go-to-dart -i ./examples/user -o ./examples/user -m firestore
 ```
 
 ## Example

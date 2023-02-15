@@ -2,6 +2,7 @@ package format
 
 import (
 	"fmt"
+	"github.com/11wizards/go-to-dart/generator/options"
 	"go/ast"
 )
 
@@ -9,12 +10,14 @@ type TypeFormatter interface {
 	SetRegistry(registry *TypeFormatterRegistry)
 	CanFormat(expr ast.Expr) bool
 	Signature(expr ast.Expr) string
+	Attribute(expr ast.Expr) string
 	Declaration(fieldName string, expr ast.Expr) string
 	Constructor(fieldName string, expr ast.Expr) string
 }
 
 type TypeFormatterBase struct {
 	Registry *TypeFormatterRegistry
+	Mode     options.Mode
 }
 
 func (t *TypeFormatterBase) SetRegistry(registry *TypeFormatterRegistry) {

@@ -32,6 +32,10 @@ func (f *FallbackFormatter) Signature(expr ast.Expr) string {
 	}
 }
 
+func (f *FallbackFormatter) Attribute(_ ast.Expr) string {
+	return ""
+}
+
 func (f *FallbackFormatter) Declaration(fieldName string, expr ast.Expr) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }

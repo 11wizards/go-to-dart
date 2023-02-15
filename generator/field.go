@@ -3,19 +3,20 @@ package generator
 import (
 	"fmt"
 	"github.com/11wizards/go-to-dart/generator/format"
+	"github.com/11wizards/go-to-dart/generator/options"
 	"go/ast"
 	"io"
 )
 
-func generateFieldDeclaration(writer io.Writer, f *ast.Field, registry *format.TypeFormatterRegistry) {
+func generateFieldDeclaration(writer io.Writer, f *ast.Field, registry *format.TypeFormatterRegistry, mode options.Mode) {
 	formatter := registry.GetTypeFormatter(f.Type)
 	fieldName := format.GetFieldName(f)
-	jsonFieldName := format.GetJSONFieldName(f)
+	jsonFieldName := format.GetJSONFieldName(f, mode)
 
 	if jsonFieldName != "" && jsonFieldName != fieldName {
-		fmt.Fprintf(writer, "@JsonKey(name: '%s') ", jsonFieldName)
+		fmt.Fprintf(writer, "@JsonKey(name: '%s')\n", jsonFieldName)
 	} else if jsonFieldName == "" {
-		fmt.Fprintf(writer, "@JsonKey(name: '%s') ", f.Names[0].Name)
+		fmt.Fprintf(writer, "@JsonKey(name: '%s')\n", f.Names[0].Name)
 	}
 
 	fmt.Fprintf(writer, "final %s", formatter.Declaration(format.GetFieldName(f), f.Type))

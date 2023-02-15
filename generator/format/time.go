@@ -20,6 +20,10 @@ func (f *TimeFormatter) Signature(_ ast.Expr) string {
 	return "DateTime"
 }
 
+func (f *TimeFormatter) Attribute(_ ast.Expr) string {
+	return ""
+}
+
 func (f *TimeFormatter) Declaration(fieldName string, expr ast.Expr) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }

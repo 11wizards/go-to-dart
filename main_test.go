@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/11wizards/go-to-dart/generator/options"
 	"github.com/stretchr/testify/require"
 	"os"
 	"path"
@@ -9,7 +10,7 @@ import (
 	"testing"
 )
 
-func runAndCompare(t *testing.T, input string) {
+func runAndCompare(t *testing.T, input string, mode options.Mode) {
 	output := path.Join(os.TempDir(), "go-to-dart-test-output", t.Name())
 
 	if err := os.RemoveAll(output); err != nil {
@@ -17,7 +18,7 @@ func runAndCompare(t *testing.T, input string) {
 		return
 	}
 
-	rootCmd.SetArgs([]string{"-i", input, "-o", output})
+	rootCmd.SetArgs([]string{"-i", input, "-o", output, "-m", string(mode)})
 
 	err := rootCmd.Execute()
 	require.NoError(t, err, "command failed")
@@ -45,9 +46,13 @@ func runAndCompare(t *testing.T, input string) {
 }
 
 func TestEverything(t *testing.T) {
-	runAndCompare(t, "./examples/everything")
+	runAndCompare(t, "./examples/everything", options.JSON)
 }
 
 func TestUser(t *testing.T) {
-	runAndCompare(t, "./examples/user")
+	runAndCompare(t, "./examples/user", options.JSON)
+}
+
+func TestFirestore(t *testing.T) {
+	runAndCompare(t, "./examples/firestore", options.Firestore)
 }

@@ -2,41 +2,59 @@ package generator
 
 import (
 	"bytes"
+	_ "embed"
 	"fmt"
 	"github.com/11wizards/go-to-dart/generator/format"
 	"github.com/11wizards/go-to-dart/generator/format/mo"
+	"github.com/11wizards/go-to-dart/generator/options"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 )
 
-func createRegistry() *format.TypeFormatterRegistry {
-	registry := format.NewTypeFormatterRegistry()
+//go:embed dart/timestamp_converter.dart
+var timestampConverterSrc string
 
-	registry.RegisterTypeFormatter(&format.FallbackFormatter{})
-	registry.RegisterTypeFormatter(&format.StructFormatter{})
-	registry.RegisterTypeFormatter(&format.AliasFormatter{})
-	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{})
-	registry.RegisterTypeFormatter(&format.TimeFormatter{})
-	registry.RegisterTypeFormatter(&format.PointerFormatter{})
-	registry.RegisterTypeFormatter(&format.ArrayFormatter{})
-	registry.RegisterTypeFormatter(&format.MapFormatter{})
-	registry.RegisterTypeFormatter(&mo.OptionFormatter{})
+func generateHeader(pkg *ast.Package, wr io.Writer, mode options.Mode) {
+	if mode == options.Firestore {
+		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
+	}
 
-	return registry
+	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n\n")
+	fmt.Fprintf(wr, "part '%s.go.g.dart';\n\n", pkg.Name)
 
+	if mode == options.Firestore {
+		fmt.Fprint(wr, timestampConverterSrc)
+		fmt.Fprint(wr, "\n\n")
+	}
 }
 
-func traversePackage(f *ast.Package, outputFile io.Writer) {
-	fmt.Fprint(outputFile, "import 'package:json_annotation/json_annotation.dart';\n\n")
-	fmt.Fprintf(outputFile, "part '%s.g.dart';\n\n", f.Name)
+func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
+	registry := format.NewTypeFormatterRegistry()
 
-	registry := createRegistry()
+	base := format.TypeFormatterBase{Mode: mode}
 
-	ast.Inspect(f, func(node ast.Node) bool {
+	registry.RegisterTypeFormatter(&format.FallbackFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.StructFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.AliasFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.TimeFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.PointerFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.ArrayFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.MapFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&mo.OptionFormatter{TypeFormatterBase: base})
+
+	return registry
+}
+
+func generateClasses(pkg *ast.Package, wr io.Writer, mode options.Mode) {
+	registry := createRegistry(mode)
+
+	ast.Inspect(pkg, func(node ast.Node) bool {
 		ts, ok := node.(*ast.TypeSpec)
 		if ok {
 			registry.KnownTypes[ts.Name.Name] = ts
@@ -46,7 +64,12 @@ func traversePackage(f *ast.Package, outputFile io.Writer) {
 		return true
 	})
 
-	ast.Inspect(f, func(node ast.Node) bool {
+	var list []struct {
+		TypeSpec   *ast.TypeSpec
+		StructType *ast.StructType
+	}
+
+	ast.Inspect(pkg, func(node ast.Node) bool {
 		ts, ok := node.(*ast.TypeSpec)
 		if !ok {
 			return true
@@ -57,8 +80,24 @@ func traversePackage(f *ast.Package, outputFile io.Writer) {
 			return true
 		}
 
-		return generateDartClass(outputFile, ts, st, registry)
+		list = append(list, struct {
+			TypeSpec   *ast.TypeSpec
+			StructType *ast.StructType
+		}{
+			TypeSpec:   ts,
+			StructType: st,
+		})
+
+		return false
 	})
+
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].TypeSpec.Name.Name < list[j].TypeSpec.Name.Name
+	})
+
+	for _, item := range list {
+		generateDartClass(wr, item.TypeSpec, item.StructType, registry, mode)
+	}
 }
 
 func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
@@ -86,9 +125,9 @@ func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
 	fmt.Printf("Processed: %s -> %s\n", outputDartFile, outputFilePath)
 }
 
-func Run(input string, output string) {
+func Run(options options.Options) {
 	fileSet := token.NewFileSet()
-	f, err := parser.ParseDir(fileSet, input, nil, 0)
+	f, err := parser.ParseDir(fileSet, options.Input, nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -97,7 +136,8 @@ func Run(input string, output string) {
 	for _, pkg := range f {
 		var buf []byte
 		wr := bytes.NewBuffer(buf)
-		traversePackage(pkg, wr)
-		writeOut(output, fmt.Sprintf("%s.dart", pkg.Name), wr)
+		generateHeader(pkg, wr, options.Mode)
+		generateClasses(pkg, wr, options.Mode)
+		writeOut(options.Output, fmt.Sprintf("%s.go.dart", pkg.Name), wr)
 	}
 }
