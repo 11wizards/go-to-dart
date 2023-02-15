@@ -13,22 +13,38 @@ import (
 	"path/filepath"
 )
 
-func init() {
-	format.Formatters = []format.TypeFormatter{
-		&format.MapFormatter{},
-		&format.ArrayFormatter{},
-		&format.PointerFormatter{},
-		&format.TimeFormatter{},
-		&format.PrimitiveFormatter{},
-		&format.AliasFormatter{},
-		&format.StructFormatter{},
-		&mo.OptionFormatter{},
-	}
+func createRegistry() *format.TypeFormatterRegistry {
+	registry := format.NewTypeFormatterRegistry()
+
+	registry.RegisterTypeFormatter(&format.FallbackFormatter{})
+	registry.RegisterTypeFormatter(&format.StructFormatter{})
+	registry.RegisterTypeFormatter(&format.AliasFormatter{})
+	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{})
+	registry.RegisterTypeFormatter(&format.TimeFormatter{})
+	registry.RegisterTypeFormatter(&format.PointerFormatter{})
+	registry.RegisterTypeFormatter(&format.ArrayFormatter{})
+	registry.RegisterTypeFormatter(&format.MapFormatter{})
+	registry.RegisterTypeFormatter(&mo.OptionFormatter{})
+
+	return registry
+
 }
 
 func traversePackage(f *ast.Package, outputFile io.Writer) {
 	fmt.Fprint(outputFile, "import 'package:json_annotation/json_annotation.dart';\n\n")
 	fmt.Fprintf(outputFile, "part '%s.g.dart';\n\n", f.Name)
+
+	registry := createRegistry()
+
+	ast.Inspect(f, func(node ast.Node) bool {
+		ts, ok := node.(*ast.TypeSpec)
+		if ok {
+			registry.KnownTypes[ts.Name.Name] = ts
+			return false
+		}
+
+		return true
+	})
 
 	ast.Inspect(f, func(node ast.Node) bool {
 		ts, ok := node.(*ast.TypeSpec)
@@ -41,7 +57,7 @@ func traversePackage(f *ast.Package, outputFile io.Writer) {
 			return true
 		}
 
-		return generateDartClass(outputFile, ts, st)
+		return generateDartClass(outputFile, ts, st, registry)
 	})
 }
 

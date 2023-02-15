@@ -6,12 +6,13 @@ import (
 )
 
 type MapFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *MapFormatter) under(expr ast.Expr) (TypeFormatter, TypeFormatter, ast.Expr, ast.Expr) {
 	mapExpr := expr.(*ast.MapType)
-	keyFormatter := GetTypeFormatter(mapExpr.Key)
-	valueFormatter := GetTypeFormatter(mapExpr.Value)
+	keyFormatter := f.Registry.GetTypeFormatter(mapExpr.Key)
+	valueFormatter := f.Registry.GetTypeFormatter(mapExpr.Value)
 	return keyFormatter, valueFormatter, mapExpr.Key, mapExpr.Value
 }
 

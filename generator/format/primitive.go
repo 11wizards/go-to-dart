@@ -6,6 +6,7 @@ import (
 )
 
 type PrimitiveFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *PrimitiveFormatter) toDartPrimitive(expr ast.Expr) string {

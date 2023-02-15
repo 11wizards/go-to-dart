@@ -3,6 +3,21 @@ import 'package:json_annotation/json_annotation.dart';
 part 'everything.g.dart';
 
 @JsonSerializable()
+class Child {
+	final int id;
+	final String name;
+	
+	Child({
+		required this.id,
+		required this.name,
+	});
+	
+	Map<String, dynamic> toJson() => _$ChildToJson(this);
+	
+	factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
+}
+
+@JsonSerializable()
 class Parent {
 	final String id;
 	final int number1;
@@ -73,20 +88,5 @@ class Parent {
 	Map<String, dynamic> toJson() => _$ParentToJson(this);
 	
 	factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
-}
-
-@JsonSerializable()
-class Child {
-	final int id;
-	final String name;
-	
-	Child({
-		required this.id,
-		required this.name,
-	});
-	
-	Map<String, dynamic> toJson() => _$ChildToJson(this);
-	
-	factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
 }
 

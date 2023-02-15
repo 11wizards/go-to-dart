@@ -6,11 +6,12 @@ import (
 )
 
 type ArrayFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *ArrayFormatter) under(expr ast.Expr) (TypeFormatter, ast.Expr) {
 	arrayExpr := expr.(*ast.ArrayType)
-	formatter := GetTypeFormatter(arrayExpr.Elt)
+	formatter := f.Registry.GetTypeFormatter(arrayExpr.Elt)
 	return formatter, arrayExpr.Elt
 }
 

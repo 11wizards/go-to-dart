@@ -7,11 +7,12 @@ import (
 )
 
 type OptionFormatter struct {
+	format.TypeFormatterBase
 }
 
 func (f *OptionFormatter) under(expr ast.Expr) (format.TypeFormatter, ast.Expr) {
 	e := expr.(*ast.IndexExpr).Index
-	formatter := format.GetTypeFormatter(e)
+	formatter := f.Registry.GetTypeFormatter(e)
 	return formatter, e
 }
 

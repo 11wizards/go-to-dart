@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-type ParentID string
-
 type Parent struct {
 	ID ParentID `json:"id"`
 
@@ -44,11 +42,4 @@ type Parent struct {
 
 	Map1 map[string]float64 `json:"map1"`
 	Map2 map[ChildID]Child  `json:"map2_weird_name"`
-}
-
-type ChildID int64
-
-type Child struct {
-	ID   ChildID `json:"id"`
-	Name string  `json:"name"`
 }

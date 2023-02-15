@@ -6,6 +6,7 @@ import (
 )
 
 type TimeFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *TimeFormatter) CanFormat(expr ast.Expr) bool {

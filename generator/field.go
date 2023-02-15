@@ -7,8 +7,8 @@ import (
 	"io"
 )
 
-func generateFieldDeclaration(writer io.Writer, f *ast.Field) {
-	formatter := format.GetTypeFormatter(f.Type)
+func generateFieldDeclaration(writer io.Writer, f *ast.Field, registry *format.TypeFormatterRegistry) {
+	formatter := registry.GetTypeFormatter(f.Type)
 	fieldName := format.GetFieldName(f)
 	jsonFieldName := format.GetJSONFieldName(f)
 
@@ -21,7 +21,7 @@ func generateFieldDeclaration(writer io.Writer, f *ast.Field) {
 	fmt.Fprintf(writer, "final %s", formatter.Declaration(format.GetFieldName(f), f.Type))
 }
 
-func generateFieldConstrutor(writer io.Writer, f *ast.Field) {
-	formatter := format.GetTypeFormatter(f.Type)
+func generateFieldConstrutor(writer io.Writer, f *ast.Field, registry *format.TypeFormatterRegistry) {
+	formatter := registry.GetTypeFormatter(f.Type)
 	fmt.Fprint(writer, formatter.Constructor(format.GetFieldName(f), f.Type))
 }

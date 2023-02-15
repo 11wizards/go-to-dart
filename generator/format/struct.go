@@ -6,6 +6,7 @@ import (
 )
 
 type StructFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *StructFormatter) under(expr ast.Expr) *ast.TypeSpec {

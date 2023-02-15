@@ -6,6 +6,7 @@ import (
 )
 
 type AliasFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *AliasFormatter) under(expr ast.Expr) *ast.Ident {
@@ -25,7 +26,7 @@ func (f *AliasFormatter) CanFormat(expr ast.Expr) bool {
 
 func (f *AliasFormatter) Signature(expr ast.Expr) string {
 	u := f.under(expr)
-	return GetTypeFormatter(u).Signature(u)
+	return f.Registry.GetTypeFormatter(u).Signature(u)
 }
 
 func (f *AliasFormatter) Declaration(fieldName string, expr ast.Expr) string {
@@ -34,5 +35,5 @@ func (f *AliasFormatter) Declaration(fieldName string, expr ast.Expr) string {
 
 func (f *AliasFormatter) Constructor(fieldName string, expr ast.Expr) string {
 	u := f.under(expr)
-	return GetTypeFormatter(u).Constructor(fieldName, u)
+	return f.Registry.GetTypeFormatter(u).Constructor(fieldName, u)
 }

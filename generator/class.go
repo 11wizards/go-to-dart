@@ -2,24 +2,25 @@ package generator
 
 import (
 	"fmt"
+	"github.com/11wizards/go-to-dart/generator/format"
 	"github.com/openconfig/goyang/pkg/indent"
 	"go/ast"
 	"io"
 )
 
-func generateFields(wr io.Writer, st *ast.StructType) {
+func generateFields(wr io.Writer, st *ast.StructType, registry *format.TypeFormatterRegistry) {
 	for _, f := range st.Fields.List {
-		generateFieldDeclaration(wr, f)
+		generateFieldDeclaration(wr, f, registry)
 		fmt.Fprintln(wr, ";")
 	}
 	fmt.Fprintln(wr)
 }
 
-func generateConstructor(wr io.Writer, ts *ast.TypeSpec, st *ast.StructType) {
+func generateConstructor(wr io.Writer, ts *ast.TypeSpec, st *ast.StructType, registry *format.TypeFormatterRegistry) {
 	fmt.Fprintf(wr, "%s({\n", ts.Name)
 
 	for _, f := range st.Fields.List {
-		generateFieldConstrutor(indent.NewWriter(wr, "\t"), f)
+		generateFieldConstrutor(indent.NewWriter(wr, "\t"), f, registry)
 		fmt.Fprintln(wr, ",")
 	}
 
@@ -36,14 +37,14 @@ func generateDeserialization(wr io.Writer, ts *ast.TypeSpec) {
 	fmt.Fprintf(wr, "factory %s.fromJson(Map<String, dynamic> json) => _$%sFromJson(json);\n", ts.Name, ts.Name)
 }
 
-func generateDartClass(outputFile io.Writer, ts *ast.TypeSpec, st *ast.StructType) bool {
+func generateDartClass(outputFile io.Writer, ts *ast.TypeSpec, st *ast.StructType, registry *format.TypeFormatterRegistry) bool {
 	fmt.Fprintln(outputFile, "@JsonSerializable()")
 	fmt.Fprintf(outputFile, "class %s {\n", ts.Name)
 
 	wr := indent.NewWriter(outputFile, "\t")
 
-	generateFields(wr, st)
-	generateConstructor(wr, ts, st)
+	generateFields(wr, st, registry)
+	generateConstructor(wr, ts, st, registry)
 	generateSerialization(wr, ts)
 	generateDeserialization(wr, ts)
 

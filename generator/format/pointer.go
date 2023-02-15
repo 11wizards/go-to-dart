@@ -6,11 +6,12 @@ import (
 )
 
 type PointerFormatter struct {
+	TypeFormatterBase
 }
 
 func (f *PointerFormatter) under(expr ast.Expr) (TypeFormatter, ast.Expr) {
 	starExpr := expr.(*ast.StarExpr)
-	formatter := GetTypeFormatter(starExpr.X)
+	formatter := f.Registry.GetTypeFormatter(starExpr.X)
 	return formatter, starExpr.X
 }
 
