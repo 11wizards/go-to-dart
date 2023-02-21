@@ -21,36 +21,35 @@ class Child {
 class Parent {
 	final String id;
 	final int number1;
-	final List<int> number2;
+	@JsonKey(defaultValue: <List<int>>[])final List<int> number2;
 	final int? number3;
 	final List<int>? number4;
-	final List<int?> number5;
+	@JsonKey(defaultValue: <List<int?>>[])final List<int?> number5;
 	final int? number6;
-	final List<int?> number7;
+	@JsonKey(defaultValue: <List<int?>>[])final List<int?> number7;
 	final String text1;
-	final List<String> text2;
+	@JsonKey(defaultValue: <List<String>>[])final List<String> text2;
 	final String? text3;
 	final List<String>? text4;
-	final List<String?> text5;
+	@JsonKey(defaultValue: <List<String?>>[])final List<String?> text5;
 	final String? text6;
-	final List<String?> text7;
+	@JsonKey(defaultValue: <List<String?>>[])final List<String?> text7;
 	final DateTime date1;
-	final List<DateTime> date2;
+	@JsonKey(defaultValue: <List<DateTime>>[])final List<DateTime> date2;
 	final DateTime? date3;
 	final List<DateTime>? date4;
-	final List<DateTime?> date5;
+	@JsonKey(defaultValue: <List<DateTime?>>[])final List<DateTime?> date5;
 	final String? date6;
-	final List<String?> date7;
+	@JsonKey(defaultValue: <List<String?>>[])final List<String?> date7;
 	final Child child1;
-	final List<Child> child2;
+	@JsonKey(defaultValue: <List<Child>>[])final List<Child> child2;
 	final Child? child3;
 	final List<Child>? child4;
-	final List<Child?> child5;
+	@JsonKey(defaultValue: <List<Child?>>[])final List<Child?> child5;
 	final Child? child6;
-	final List<Child?> child7;
-	final Map<String, double> map1;
-	@JsonKey(name: 'map2_weird_name')
-	final Map<int, Child> map2;
+	@JsonKey(defaultValue: <List<Child?>>[])final List<Child?> child7;
+	@JsonKey(defaultValue: <String, double>{})final Map<String, double> map1;
+	@JsonKey(name: "map2_weird_name", defaultValue: <int, Child>{})final Map<int, Child> map2;
 	
 	Parent({
 		required this.id,

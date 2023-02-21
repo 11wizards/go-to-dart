@@ -20,7 +20,7 @@ func (f *TimeFormatter) Signature(_ ast.Expr) string {
 	return "DateTime"
 }
 
-func (f *TimeFormatter) Attribute(_ ast.Expr) string {
+func (f *TimeFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

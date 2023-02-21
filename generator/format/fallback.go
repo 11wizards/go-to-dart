@@ -32,7 +32,7 @@ func (f *FallbackFormatter) Signature(expr ast.Expr) string {
 	}
 }
 
-func (f *FallbackFormatter) Attribute(_ ast.Expr) string {
+func (f *FallbackFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

@@ -30,7 +30,7 @@ func (f *OptionFormatter) Signature(expr ast.Expr) string {
 	return fmt.Sprintf("%s?", formatter.Signature(expr))
 }
 
-func (f *OptionFormatter) Attribute(_ ast.Expr) string {
+func (f *OptionFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

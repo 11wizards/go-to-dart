@@ -10,7 +10,7 @@ type TypeFormatter interface {
 	SetRegistry(registry *TypeFormatterRegistry)
 	CanFormat(expr ast.Expr) bool
 	Signature(expr ast.Expr) string
-	Attribute(expr ast.Expr) string
+	DefaultValue(expr ast.Expr) string
 	Declaration(fieldName string, expr ast.Expr) string
 	Constructor(fieldName string, expr ast.Expr) string
 }

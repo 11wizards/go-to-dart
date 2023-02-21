@@ -4,24 +4,15 @@ part 'user.go.g.dart';
 
 @JsonSerializable()
 class User {
-	@JsonKey(name: 'ID')
-	final int id;
-	@JsonKey(name: 'Name')
-	final String name;
-	@JsonKey(name: 'Email')
-	final String email;
-	@JsonKey(name: 'Password')
-	final String password;
-	@JsonKey(name: 'CreatedAt')
-	final DateTime createdAt;
-	@JsonKey(name: 'UpdatedAt')
-	final DateTime updatedAt;
-	@JsonKey(name: 'DeletedAt')
-	final DateTime? deletedAt;
-	@JsonKey(name: 'Options')
-	final Map<String, String> options;
-	@JsonKey(name: 'Tags')
-	final List<String> tags;
+	@JsonKey(name: "ID")final int id;
+	@JsonKey(name: "Name")final String name;
+	@JsonKey(name: "Email")final String email;
+	@JsonKey(name: "Password")final String password;
+	@JsonKey(name: "CreatedAt")final DateTime createdAt;
+	@JsonKey(name: "UpdatedAt")final DateTime updatedAt;
+	@JsonKey(name: "DeletedAt")final DateTime? deletedAt;
+	@JsonKey(name: "Options", defaultValue: <String, String>{})final Map<String, String> options;
+	@JsonKey(name: "Tags", defaultValue: <List<String>>[])final List<String> tags;
 	
 	User({
 		required this.id,

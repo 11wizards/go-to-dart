@@ -23,8 +23,8 @@ class User {
 	final DateTime createdAt;
 	final DateTime updatedAt;
 	final DateTime? deletedAt;
-	final Map<String, String> options;
-	final List<String> tags;
+	@JsonKey(defaultValue: <String, String>{})final Map<String, String> options;
+	@JsonKey(defaultValue: <List<String>>[])final List<String> tags;
 	
 	User({
 		required this.id,

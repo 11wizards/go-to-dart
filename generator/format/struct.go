@@ -29,7 +29,7 @@ func (f *StructFormatter) Signature(expr ast.Expr) string {
 	return u.Name.Name
 }
 
-func (f *StructFormatter) Attribute(_ ast.Expr) string {
+func (f *StructFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

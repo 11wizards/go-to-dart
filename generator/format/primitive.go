@@ -60,7 +60,7 @@ func (f *PrimitiveFormatter) Signature(expr ast.Expr) string {
 	return f.toDartPrimitive(expr)
 }
 
-func (f *PrimitiveFormatter) Attribute(_ ast.Expr) string {
+func (f *PrimitiveFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

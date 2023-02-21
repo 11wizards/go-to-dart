@@ -25,7 +25,7 @@ func (f *PointerFormatter) Signature(expr ast.Expr) string {
 	return fmt.Sprintf("%s?", formatter.Signature(expr))
 }
 
-func (f *PointerFormatter) Attribute(_ ast.Expr) string {
+func (f *PointerFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 

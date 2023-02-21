@@ -25,8 +25,8 @@ func (f *ArrayFormatter) Signature(expr ast.Expr) string {
 	return fmt.Sprintf("List<%s>", formatter.Signature(expr))
 }
 
-func (f *ArrayFormatter) Attribute(_ ast.Expr) string {
-	return ""
+func (f *ArrayFormatter) DefaultValue(expr ast.Expr) string {
+	return fmt.Sprintf("<%s>[]", f.Signature(expr))
 }
 
 func (f *ArrayFormatter) Declaration(fieldName string, expr ast.Expr) string {

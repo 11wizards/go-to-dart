@@ -29,7 +29,7 @@ func (f *AliasFormatter) Signature(expr ast.Expr) string {
 	return f.Registry.GetTypeFormatter(u).Signature(u)
 }
 
-func (f *AliasFormatter) Attribute(_ ast.Expr) string {
+func (f *AliasFormatter) DefaultValue(_ ast.Expr) string {
 	return ""
 }
 
