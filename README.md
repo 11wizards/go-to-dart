@@ -14,7 +14,7 @@ Need something more? Please open an issue or even better, a PR!
 ## Installation
 
 ```bash
-go install github.com/11wizards/go-to-dart
+go install github.com/11wizards/go-to-dart@latest
 ```
 
 The above command will install go-to-dart in your `$GOPATH/bin` directory. Make sure that directory is in your `$PATH`.
