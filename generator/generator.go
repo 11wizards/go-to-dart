@@ -20,13 +20,17 @@ import (
 //go:embed dart/timestamp_converter.dart
 var timestampConverterSrc string
 
-func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode) {
+func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, imports []string) {
 	if mode == options.Firestore {
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
 
-	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n\n")
-	fmt.Fprintf(wr, "part '%s.go.g.dart';\n\n", pkg.Name)
+	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n")
+	for _, imp := range imports {
+		fmt.Fprintf(wr, "import '%s';\n", imp)
+	}
+
+	fmt.Fprintf(wr, "\npart '%s.go.g.dart';\n\n", pkg.Name)
 
 	if mode == options.Firestore {
 		fmt.Fprint(wr, timestampConverterSrc)
@@ -122,7 +126,14 @@ func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
 }
 
 func Run(options options.Options) {
+	if abs, err := filepath.Abs(options.Input); err == nil {
+		options.Input = abs
+	} else {
+		panic(err)
+	}
+
 	pkgs, err := packages.Load(&packages.Config{
+		Dir:  options.Input,
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedImports | packages.NeedDeps | packages.NeedTypes | packages.NeedSyntax | packages.NeedTypesInfo,
 	}, options.Input)
 
@@ -132,9 +143,19 @@ func Run(options options.Options) {
 	}
 
 	for _, pkg := range pkgs {
+		if len(pkg.Errors) > 0 {
+			for _, err := range pkg.Errors {
+				fmt.Println(err)
+			}
+
+			os.Exit(1)
+		}
+	}
+
+	for _, pkg := range pkgs {
 		var buf []byte
 		wr := bytes.NewBuffer(buf)
-		generateHeader(pkg, wr, options.Mode)
+		generateHeader(pkg, wr, options.Mode, options.Imports)
 		generateClasses(pkg, wr, options.Mode)
 		writeOut(options.Output, fmt.Sprintf("%s.go.dart", pkg.Name), wr)
 	}
