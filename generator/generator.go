@@ -122,13 +122,30 @@ func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
 }
 
 func Run(options options.Options) {
+	if abs, err := filepath.Abs(options.Input); err == nil {
+		options.Input = abs
+	} else {
+		panic(err)
+	}
+
 	pkgs, err := packages.Load(&packages.Config{
+		Dir:  options.Input,
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedImports | packages.NeedDeps | packages.NeedTypes | packages.NeedSyntax | packages.NeedTypesInfo,
 	}, options.Input)
 
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+
+	for _, pkg := range pkgs {
+		if len(pkg.Errors) > 0 {
+			for _, err := range pkg.Errors {
+				fmt.Println(err)
+			}
+
+			os.Exit(1)
+		}
 	}
 
 	for _, pkg := range pkgs {
