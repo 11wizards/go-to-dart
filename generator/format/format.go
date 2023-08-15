@@ -2,17 +2,18 @@ package format
 
 import (
 	"fmt"
+	"go/types"
+
 	"github.com/11wizards/go-to-dart/generator/options"
-	"go/ast"
 )
 
 type TypeFormatter interface {
 	SetRegistry(registry *TypeFormatterRegistry)
-	CanFormat(expr ast.Expr) bool
-	Signature(expr ast.Expr) string
-	DefaultValue(expr ast.Expr) string
-	Declaration(fieldName string, expr ast.Expr) string
-	Constructor(fieldName string, expr ast.Expr) string
+	CanFormat(expr types.Type) bool
+	Signature(expr types.Type) string
+	DefaultValue(expr types.Type) string
+	Declaration(fieldName string, expr types.Type) string
+	Constructor(fieldName string, expr types.Type) string
 }
 
 type TypeFormatterBase struct {
@@ -25,13 +26,13 @@ func (t *TypeFormatterBase) SetRegistry(registry *TypeFormatterRegistry) {
 }
 
 type TypeFormatterRegistry struct {
-	KnownTypes map[string]*ast.TypeSpec
+	KnownTypes map[types.Type]struct{}
 	Formatters []TypeFormatter
 }
 
 func NewTypeFormatterRegistry() *TypeFormatterRegistry {
 	return &TypeFormatterRegistry{
-		KnownTypes: make(map[string]*ast.TypeSpec),
+		KnownTypes: make(map[types.Type]struct{}),
 		Formatters: make([]TypeFormatter, 0),
 	}
 }
@@ -40,7 +41,7 @@ func (t *TypeFormatterRegistry) RegisterTypeFormatter(formatter TypeFormatter) {
 	formatter.SetRegistry(t)
 }
 
-func (t *TypeFormatterRegistry) GetTypeFormatter(expr ast.Expr) TypeFormatter {
+func (t *TypeFormatterRegistry) GetTypeFormatter(expr types.Type) TypeFormatter {
 	// walks the t.Formatters in reverse order
 	// so that the last registered formatter is the first to be checked
 	for i := len(t.Formatters) - 1; i >= 0; i-- {

@@ -2,34 +2,35 @@ package format
 
 import (
 	"fmt"
-	"github.com/11wizards/go-to-dart/generator/options"
-	"github.com/iancoleman/strcase"
-	"go/ast"
+	"go/types"
 	"reflect"
 	"strings"
+
+	"github.com/11wizards/go-to-dart/generator/options"
+	"github.com/iancoleman/strcase"
 )
 
-func GetFieldName(f *ast.Field) string {
-	if f.Names == nil {
+func GetFieldName(f *types.Var) string {
+	if f.Anonymous() {
 		panic(fmt.Sprintf("no name for field: %#v", f))
 	}
 
-	return strcase.ToLowerCamel(f.Names[0].Name)
+	return strcase.ToLowerCamel(f.Name())
 }
 
-func GetJSONFieldName(f *ast.Field, mode options.Mode) string {
-	var tag string
+func GetJSONFieldName(tag string, mode options.Mode) string {
+	var tagName string
 	if mode == options.Firestore {
-		tag = "firestore"
+		tagName = "firestore"
 	} else {
-		tag = "json"
+		tagName = "json"
 	}
-	// Check for json struct field tag
-	if f.Tag != nil {
-		val := reflect.StructTag(strings.Trim(f.Tag.Value, "`"))
-		tag, ok := val.Lookup(tag)
+
+	if tag != "" {
+		val := reflect.StructTag(strings.Trim(tag, "`"))
+		value, ok := val.Lookup(tagName)
 		if ok {
-			return strings.Split(tag, ",")[0]
+			return strings.Split(value, ",")[0]
 		}
 	}
 

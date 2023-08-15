@@ -49,7 +49,7 @@ class Parent {
 	final Child? child6;
 	@JsonKey(defaultValue: <List<Child?>>[])final List<Child?> child7;
 	@JsonKey(defaultValue: <String, double>{})final Map<String, double> map1;
-	@JsonKey(name: "map2_weird_name", defaultValue: <int, Child>{})final Map<int, Child> map2;
+	@JsonKey(defaultValue: <int, Child>{}, name: "map2_weird_name")final Map<int, Child> map2;
 	
 	Parent({
 		required this.id,

@@ -2,42 +2,44 @@ package mo
 
 import (
 	"fmt"
+	"go/types"
+
 	"github.com/11wizards/go-to-dart/generator/format"
-	"go/ast"
 )
 
 type OptionFormatter struct {
 	format.TypeFormatterBase
 }
 
-func (f *OptionFormatter) under(expr ast.Expr) (format.TypeFormatter, ast.Expr) {
-	e := expr.(*ast.IndexExpr).Index
+func (f *OptionFormatter) under(expr types.Type) (format.TypeFormatter, types.Type) {
+	e := expr.(*types.Named).TypeArgs().At(0)
 	formatter := f.Registry.GetTypeFormatter(e)
 	return formatter, e
 }
 
-func (f *OptionFormatter) CanFormat(expr ast.Expr) bool {
-	if x, ok := expr.(*ast.IndexExpr); ok {
-		if y, ok := x.X.(*ast.SelectorExpr); ok && y.X.(*ast.Ident).Name == "mo" && y.Sel.Name == "Option" {
+func (f *OptionFormatter) CanFormat(expr types.Type) bool {
+	if namedType, ok := expr.(*types.Named); ok {
+		if namedType.Obj().Type().String() == "github.com/samber/mo.Option[T any]" {
 			return true
 		}
 	}
+
 	return false
 }
 
-func (f *OptionFormatter) Signature(expr ast.Expr) string {
+func (f *OptionFormatter) Signature(expr types.Type) string {
 	formatter, expr := f.under(expr)
 	return fmt.Sprintf("%s?", formatter.Signature(expr))
 }
 
-func (f *OptionFormatter) DefaultValue(_ ast.Expr) string {
+func (f *OptionFormatter) DefaultValue(_ types.Type) string {
 	return ""
 }
 
-func (f *OptionFormatter) Declaration(fieldName string, expr ast.Expr) string {
+func (f *OptionFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *OptionFormatter) Constructor(fieldName string, _ ast.Expr) string {
+func (f *OptionFormatter) Constructor(fieldName string, _ types.Type) string {
 	return "this." + fieldName
 }
