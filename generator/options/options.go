@@ -8,7 +8,8 @@ const (
 )
 
 type Options struct {
-	Input  string
-	Output string
-	Mode   Mode
+	Input   string
+	Output  string
+	Imports []string
+	Mode    Mode
 }

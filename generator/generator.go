@@ -20,13 +20,17 @@ import (
 //go:embed dart/timestamp_converter.dart
 var timestampConverterSrc string
 
-func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode) {
+func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, imports []string) {
 	if mode == options.Firestore {
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
 
-	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n\n")
-	fmt.Fprintf(wr, "part '%s.go.g.dart';\n\n", pkg.Name)
+	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n")
+	for _, imp := range imports {
+		fmt.Fprintf(wr, "import '%s';\n", imp)
+	}
+
+	fmt.Fprintf(wr, "\npart '%s.go.g.dart';\n\n", pkg.Name)
 
 	if mode == options.Firestore {
 		fmt.Fprint(wr, timestampConverterSrc)
@@ -151,7 +155,7 @@ func Run(options options.Options) {
 	for _, pkg := range pkgs {
 		var buf []byte
 		wr := bytes.NewBuffer(buf)
-		generateHeader(pkg, wr, options.Mode)
+		generateHeader(pkg, wr, options.Mode, options.Imports)
 		generateClasses(pkg, wr, options.Mode)
 		writeOut(options.Output, fmt.Sprintf("%s.go.dart", pkg.Name), wr)
 	}
