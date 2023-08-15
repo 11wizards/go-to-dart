@@ -2,32 +2,35 @@ package format
 
 import (
 	"fmt"
-	"go/ast"
+	"go/types"
 )
 
 type TimeFormatter struct {
 	TypeFormatterBase
 }
 
-func (f *TimeFormatter) CanFormat(expr ast.Expr) bool {
-	if v, ok := expr.(*ast.SelectorExpr); ok {
-		return v.X.(*ast.Ident).Name == "time" && v.Sel.Name == "Time"
+func (f *TimeFormatter) CanFormat(expr types.Type) bool {
+	if namedType, ok := expr.(*types.Named); ok {
+		if namedType.Obj().Type().String() == "time.Time" {
+			return true
+		}
 	}
+
 	return false
 }
 
-func (f *TimeFormatter) Signature(_ ast.Expr) string {
+func (f *TimeFormatter) Signature(_ types.Type) string {
 	return "DateTime"
 }
 
-func (f *TimeFormatter) DefaultValue(_ ast.Expr) string {
+func (f *TimeFormatter) DefaultValue(_ types.Type) string {
 	return ""
 }
 
-func (f *TimeFormatter) Declaration(fieldName string, expr ast.Expr) string {
+func (f *TimeFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *TimeFormatter) Constructor(fieldName string, _ ast.Expr) string {
+func (f *TimeFormatter) Constructor(fieldName string, _ types.Type) string {
 	return fmt.Sprintf("required this.%s", fieldName)
 }

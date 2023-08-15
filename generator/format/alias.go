@@ -2,42 +2,39 @@ package format
 
 import (
 	"fmt"
-	"go/ast"
+	"go/types"
 )
 
 type AliasFormatter struct {
 	TypeFormatterBase
 }
 
-func (f *AliasFormatter) under(expr ast.Expr) *ast.Ident {
-	if x, ok := expr.(*ast.Ident); ok && x.Obj != nil {
-		if y, ok := x.Obj.Decl.(*ast.TypeSpec); ok {
-			if z, ok := y.Type.(*ast.Ident); ok {
-				return z
-			}
-		}
+func (f *AliasFormatter) under(expr types.Type) types.Type {
+	if namedType, ok := expr.(*types.Named); ok {
+		return namedType.Underlying()
 	}
-	return nil
+
+	return expr
 }
 
-func (f *AliasFormatter) CanFormat(expr ast.Expr) bool {
+func (f *AliasFormatter) CanFormat(expr types.Type) bool {
 	return f.under(expr) != nil
 }
 
-func (f *AliasFormatter) Signature(expr ast.Expr) string {
+func (f *AliasFormatter) Signature(expr types.Type) string {
 	u := f.under(expr)
 	return f.Registry.GetTypeFormatter(u).Signature(u)
 }
 
-func (f *AliasFormatter) DefaultValue(_ ast.Expr) string {
+func (f *AliasFormatter) DefaultValue(_ types.Type) string {
 	return ""
 }
 
-func (f *AliasFormatter) Declaration(fieldName string, expr ast.Expr) string {
+func (f *AliasFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *AliasFormatter) Constructor(fieldName string, expr ast.Expr) string {
+func (f *AliasFormatter) Constructor(fieldName string, expr types.Type) string {
 	u := f.under(expr)
 	return f.Registry.GetTypeFormatter(u).Constructor(fieldName, u)
 }

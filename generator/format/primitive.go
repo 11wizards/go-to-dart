@@ -2,49 +2,45 @@ package format
 
 import (
 	"fmt"
-	"go/ast"
+	"go/types"
 )
 
 type PrimitiveFormatter struct {
 	TypeFormatterBase
 }
 
-func (f *PrimitiveFormatter) toDartPrimitive(expr ast.Expr) string {
-	if e, ok := expr.(*ast.Ident); ok && e.Obj == nil {
-		switch e.Name {
-		case "bool":
+func (f *PrimitiveFormatter) toDartPrimitive(expr types.Type) string {
+	if e, ok := expr.(*types.Basic); ok {
+		switch e.Kind() {
+		case types.Bool:
 			return "bool"
-		case "byte":
-			return "int"
-		case "float32":
+		case types.Float32:
 			return "double"
-		case "float64":
+		case types.Float64:
 			return "double"
-		case "int":
+		case types.Int:
 			return "int"
-		case "int16":
+		case types.Int16:
 			return "int"
-		case "int32":
+		case types.Int32:
 			return "int"
-		case "int64":
+		case types.Int64:
 			return "int"
-		case "int8":
+		case types.Int8:
 			return "int"
-		case "rune":
-			return "int"
-		case "string":
+		case types.String:
 			return "String"
-		case "uint":
+		case types.Uint:
 			return "int"
-		case "uint16":
+		case types.Uint16:
 			return "int"
-		case "uint32":
+		case types.Uint32:
 			return "int"
-		case "uint64":
+		case types.Uint64:
 			return "int"
-		case "uint8":
+		case types.Uint8:
 			return "int"
-		case "uintptr":
+		case types.Uintptr:
 			return "int"
 		}
 	}
@@ -52,22 +48,22 @@ func (f *PrimitiveFormatter) toDartPrimitive(expr ast.Expr) string {
 	return ""
 }
 
-func (f *PrimitiveFormatter) CanFormat(expr ast.Expr) bool {
+func (f *PrimitiveFormatter) CanFormat(expr types.Type) bool {
 	return f.toDartPrimitive(expr) != ""
 }
 
-func (f *PrimitiveFormatter) Signature(expr ast.Expr) string {
+func (f *PrimitiveFormatter) Signature(expr types.Type) string {
 	return f.toDartPrimitive(expr)
 }
 
-func (f *PrimitiveFormatter) DefaultValue(_ ast.Expr) string {
+func (f *PrimitiveFormatter) DefaultValue(_ types.Type) string {
 	return ""
 }
 
-func (f *PrimitiveFormatter) Declaration(fieldName string, expr ast.Expr) string {
+func (f *PrimitiveFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *PrimitiveFormatter) Constructor(fieldName string, _ ast.Expr) string {
+func (f *PrimitiveFormatter) Constructor(fieldName string, _ types.Type) string {
 	return "required this." + fieldName
 }

@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/11wizards/go-to-dart/generator/options"
-	"github.com/stretchr/testify/require"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/11wizards/go-to-dart/generator/options"
+	"github.com/stretchr/testify/require"
 )
 
 func runAndCompare(t *testing.T, input string, mode options.Mode) {
@@ -55,4 +56,8 @@ func TestUser(t *testing.T) {
 
 func TestFirestore(t *testing.T) {
 	runAndCompare(t, "./examples/firestore", options.Firestore)
+}
+
+func TestMultipackage(t *testing.T) {
+	runAndCompare(t, "./examples/multipackage", options.Firestore)
 }

@@ -11,8 +11,8 @@ class User {
 	@JsonKey(name: "CreatedAt")final DateTime createdAt;
 	@JsonKey(name: "UpdatedAt")final DateTime updatedAt;
 	@JsonKey(name: "DeletedAt")final DateTime? deletedAt;
-	@JsonKey(name: "Options", defaultValue: <String, String>{})final Map<String, String> options;
-	@JsonKey(name: "Tags", defaultValue: <List<String>>[])final List<String> tags;
+	@JsonKey(defaultValue: <String, String>{}, name: "Options")final Map<String, String> options;
+	@JsonKey(defaultValue: <List<String>>[], name: "Tags")final List<String> tags;
 	
 	User({
 		required this.id,

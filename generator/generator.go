@@ -4,22 +4,23 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
-	"github.com/11wizards/go-to-dart/generator/format"
-	"github.com/11wizards/go-to-dart/generator/format/mo"
-	"github.com/11wizards/go-to-dart/generator/options"
-	"go/ast"
-	"go/parser"
-	"go/token"
+	"go/types"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/11wizards/go-to-dart/generator/format"
+	"github.com/11wizards/go-to-dart/generator/format/mo"
+	"github.com/11wizards/go-to-dart/generator/options"
+
+	"golang.org/x/tools/go/packages"
 )
 
 //go:embed dart/timestamp_converter.dart
 var timestampConverterSrc string
 
-func generateHeader(pkg *ast.Package, wr io.Writer, mode options.Mode) {
+func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 	if mode == options.Firestore {
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
@@ -38,9 +39,8 @@ func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
 
 	base := format.TypeFormatterBase{Mode: mode}
 
-	registry.RegisterTypeFormatter(&format.FallbackFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.StructFormatter{TypeFormatterBase: base})
 	registry.RegisterTypeFormatter(&format.AliasFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.StructFormatter{TypeFormatterBase: base})
 	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{TypeFormatterBase: base})
 	registry.RegisterTypeFormatter(&format.TimeFormatter{TypeFormatterBase: base})
 	registry.RegisterTypeFormatter(&format.PointerFormatter{TypeFormatterBase: base})
@@ -51,52 +51,48 @@ func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
 	return registry
 }
 
-func generateClasses(pkg *ast.Package, wr io.Writer, mode options.Mode) {
+func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 	registry := createRegistry(mode)
 
-	ast.Inspect(pkg, func(node ast.Node) bool {
-		ts, ok := node.(*ast.TypeSpec)
-		if ok {
-			registry.KnownTypes[ts.Name.Name] = ts
-			return false
+	for _, value := range pkg.TypesInfo.Defs {
+		if value == nil {
+			continue
 		}
 
-		return true
-	})
-
-	var list []struct {
-		TypeSpec   *ast.TypeSpec
-		StructType *ast.StructType
+		if typeName, ok := value.(*types.TypeName); ok {
+			registry.KnownTypes[typeName.Type()] = struct{}{}
+		}
 	}
 
-	ast.Inspect(pkg, func(node ast.Node) bool {
-		ts, ok := node.(*ast.TypeSpec)
-		if !ok {
-			return true
+	var list []struct {
+		TypeName   *types.TypeName
+		StructType *types.Struct
+	}
+
+	for _, value := range pkg.TypesInfo.Defs {
+		if value == nil {
+			continue
 		}
 
-		st, ok := ts.Type.(*ast.StructType)
-		if !ok {
-			return true
+		if typeName, ok := value.(*types.TypeName); ok {
+			if structType, ok := typeName.Type().Underlying().(*types.Struct); ok {
+				list = append(list, struct {
+					TypeName   *types.TypeName
+					StructType *types.Struct
+				}{
+					TypeName:   typeName,
+					StructType: structType,
+				})
+			}
 		}
-
-		list = append(list, struct {
-			TypeSpec   *ast.TypeSpec
-			StructType *ast.StructType
-		}{
-			TypeSpec:   ts,
-			StructType: st,
-		})
-
-		return false
-	})
+	}
 
 	sort.Slice(list, func(i, j int) bool {
-		return list[i].TypeSpec.Name.Name < list[j].TypeSpec.Name.Name
+		return list[i].TypeName.Name() < list[j].TypeName.Name()
 	})
 
 	for _, item := range list {
-		generateDartClass(wr, item.TypeSpec, item.StructType, registry, mode)
+		generateDartClass(wr, item.TypeName, item.StructType, registry, mode)
 	}
 }
 
@@ -126,14 +122,16 @@ func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
 }
 
 func Run(options options.Options) {
-	fileSet := token.NewFileSet()
-	f, err := parser.ParseDir(fileSet, options.Input, nil, 0)
+	pkgs, err := packages.Load(&packages.Config{
+		Mode: packages.NeedName | packages.NeedFiles | packages.NeedImports | packages.NeedDeps | packages.NeedTypes | packages.NeedSyntax | packages.NeedTypesInfo,
+	}, options.Input)
+
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	for _, pkg := range f {
+	for _, pkg := range pkgs {
 		var buf []byte
 		wr := bytes.NewBuffer(buf)
 		generateHeader(pkg, wr, options.Mode)
