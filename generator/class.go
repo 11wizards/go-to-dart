@@ -43,7 +43,7 @@ func generateDeserialization(wr io.Writer, ts *types.TypeName) {
 }
 
 func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
-	fmt.Fprintln(outputFile, "@JsonSerializable()")
+	fmt.Fprintln(outputFile, "@JsonSerializable(explicitToJson: true)")
 	if mode == options.Firestore {
 		fmt.Fprintln(outputFile, "@_TimestampConverter()")
 	}

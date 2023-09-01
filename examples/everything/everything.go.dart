@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'everything.go.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Child {
 	final int id;
 	final String name;
@@ -17,7 +17,7 @@ class Child {
 	factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Parent {
 	final String id;
 	final int number1;

@@ -61,7 +61,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user.go.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class User {
 	@JsonKey(name: "ID")final int id;
 	@JsonKey(name: "Name")final String name;

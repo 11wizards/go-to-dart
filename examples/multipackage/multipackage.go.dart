@@ -13,7 +13,7 @@ class _TimestampConverter implements JsonConverter<DateTime, Timestamp> {
   Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 @_TimestampConverter()
 class Outer {
 	final String? id;
