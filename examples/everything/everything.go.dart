@@ -18,6 +18,16 @@ class Child {
 }
 
 @JsonSerializable(explicitToJson: true)
+class Empty {
+	
+	Empty();
+	
+	Map<String, dynamic> toJson() => _$EmptyToJson(this);
+	
+	factory Empty.fromJson(Map<String, dynamic> json) => _$EmptyFromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
 class Parent {
 	final String id;
 	final int number1;
@@ -50,6 +60,7 @@ class Parent {
 	@JsonKey(defaultValue: <List<Child?>>[])final List<Child?> child7;
 	@JsonKey(defaultValue: <String, double>{})final Map<String, double> map1;
 	@JsonKey(defaultValue: <int, Child>{}, name: "map2_weird_name")final Map<int, Child> map2;
+	@JsonKey(name: "empty")final Empty empty1;
 	
 	Parent({
 		required this.id,
@@ -83,6 +94,7 @@ class Parent {
 		required this.child7,
 		required this.map1,
 		required this.map2,
+		required this.empty1,
 	});
 	
 	Map<String, dynamic> toJson() => _$ParentToJson(this);

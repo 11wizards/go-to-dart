@@ -1,8 +1,9 @@
 package everything
 
 import (
-	"github.com/samber/mo"
 	"time"
+
+	"github.com/samber/mo"
 )
 
 type Parent struct {
@@ -42,4 +43,9 @@ type Parent struct {
 
 	Map1 map[string]float64 `json:"map1"`
 	Map2 map[ChildID]Child  `json:"map2_weird_name,omitempty"`
+
+	Empty1 Empty `json:"empty"`
+}
+
+type Empty struct {
 }

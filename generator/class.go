@@ -21,15 +21,19 @@ func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatt
 }
 
 func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry) {
-	fmt.Fprintf(wr, "%s({\n", ts.Name())
+	fmt.Fprintf(wr, "%s(", ts.Name())
 
-	for i := 0; i < st.NumFields(); i++ {
-		f := st.Field(i)
-		generateFieldConstrutor(indent.NewWriter(wr, "\t"), f, registry)
-		fmt.Fprintln(wr, ",")
+	if st.NumFields() > 0 {
+		fmt.Fprintln(wr, "{")
+		for i := 0; i < st.NumFields(); i++ {
+			f := st.Field(i)
+			generateFieldConstrutor(indent.NewWriter(wr, "\t"), f, registry)
+			fmt.Fprintln(wr, ",")
+		}
+		fmt.Fprint(wr, "}")
 	}
 
-	fmt.Fprintf(wr, "});")
+	fmt.Fprintf(wr, ");")
 	fmt.Fprintln(wr)
 	fmt.Fprintln(wr)
 }
