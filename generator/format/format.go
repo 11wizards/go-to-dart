@@ -25,6 +25,22 @@ func (t *TypeFormatterBase) SetRegistry(registry *TypeFormatterRegistry) {
 	t.Registry = registry
 }
 
+func (t *TypeFormatterBase) DefaultValue(expr types.Type) string {
+	return ""
+}
+
+func (f *TypeFormatterBase) Constructor(fieldName string, _ types.Type) string {
+	return "required this." + fieldName
+}
+
+type StructFormatter interface {
+	TypeFormatter
+	Name(expr *types.TypeName) string
+	Serialization(expr *types.TypeName) string
+	Deserialization(expr *types.TypeName) string
+	Annotation(expr *types.TypeName) string
+}
+
 type TypeFormatterRegistry struct {
 	KnownTypes map[types.Type]struct{}
 	Formatters []TypeFormatter

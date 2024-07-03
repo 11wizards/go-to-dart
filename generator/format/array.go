@@ -34,6 +34,4 @@ func (f *ArrayFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *ArrayFormatter) Constructor(fieldName string, _ types.Type) string {
-	return "required this." + fieldName
-}
+var _ TypeFormatter = (*ArrayFormatter)(nil)

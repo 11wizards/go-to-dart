@@ -61,3 +61,7 @@ func TestFirestore(t *testing.T) {
 func TestMultipackage(t *testing.T) {
 	runAndCompare(t, "./examples/multipackage", options.Firestore)
 }
+
+func TestGenerics(t *testing.T) {
+	runAndCompare(t, "./examples/generics", options.JSON)
+}

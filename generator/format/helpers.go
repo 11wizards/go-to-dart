@@ -1,6 +1,7 @@
 package format
 
 import (
+	"bytes"
 	"fmt"
 	"go/types"
 	"reflect"
@@ -35,4 +36,35 @@ func GetJSONFieldName(tag string, mode options.Mode) string {
 	}
 
 	return ""
+}
+
+func GenerateTypeParams(registry *TypeFormatterRegistry, named *types.Named) string {
+	buf := new(bytes.Buffer)
+	typeArgs := named.TypeArgs()
+	typeParams := named.TypeParams()
+
+	if typeArgs.Len() > 0 {
+		fmt.Fprint(buf, "<")
+		for i := 0; i < typeArgs.Len(); i++ {
+			arg := typeArgs.At(i)
+			name := registry.GetTypeFormatter(arg).Signature(arg)
+			if i > 0 {
+				fmt.Fprint(buf, ", ")
+			}
+			fmt.Fprint(buf, name)
+		}
+		fmt.Fprint(buf, ">")
+	} else if typeParams.Len() > 0 {
+		fmt.Fprint(buf, "<")
+		for i := 0; i < typeParams.Len(); i++ {
+			param := typeParams.At(i).String()
+			if i > 0 {
+				fmt.Fprint(buf, ", ")
+			}
+			fmt.Fprint(buf, param)
+		}
+		fmt.Fprint(buf, ">")
+	}
+
+	return buf.String()
 }

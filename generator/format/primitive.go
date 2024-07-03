@@ -56,14 +56,8 @@ func (f *PrimitiveFormatter) Signature(expr types.Type) string {
 	return f.toDartPrimitive(expr)
 }
 
-func (f *PrimitiveFormatter) DefaultValue(_ types.Type) string {
-	return ""
-}
-
 func (f *PrimitiveFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *PrimitiveFormatter) Constructor(fieldName string, _ types.Type) string {
-	return "required this." + fieldName
-}
+var _ TypeFormatter = (*PrimitiveFormatter)(nil)

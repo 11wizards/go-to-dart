@@ -37,29 +37,24 @@ func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, reg
 	fmt.Fprintln(wr)
 	fmt.Fprintln(wr)
 }
-
-func generateSerialization(wr io.Writer, ts *types.TypeName) {
-	fmt.Fprintf(wr, "Map<String, dynamic> toJson() => _$%sToJson(this);\n\n", ts.Name())
-}
-
-func generateDeserialization(wr io.Writer, ts *types.TypeName) {
-	fmt.Fprintf(wr, "factory %s.fromJson(Map<String, dynamic> json) => _$%sFromJson(json);\n", ts.Name(), ts.Name())
-}
-
 func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
-	fmt.Fprintln(outputFile, "@JsonSerializable(explicitToJson: true)")
+	formatter, ok := registry.GetTypeFormatter(ts.Type()).(format.StructFormatter)
+	if !ok {
+		panic(fmt.Sprintf("expected StructFormatter, got %T", registry.GetTypeFormatter(ts.Type())))
+	}
+
+	fmt.Fprintln(outputFile, formatter.Annotation(ts))
 	if mode == options.Firestore {
 		fmt.Fprintln(outputFile, "@_TimestampConverter()")
 	}
-
-	fmt.Fprintf(outputFile, "class %s {\n", ts.Name())
+	fmt.Fprintf(outputFile, "class %s {\n", formatter.Name(ts))
 
 	wr := indent.NewWriter(outputFile, "\t")
 
 	generateFields(wr, st, registry, mode)
 	generateConstructor(wr, ts, st, registry)
-	generateSerialization(wr, ts)
-	generateDeserialization(wr, ts)
+	fmt.Fprint(wr, formatter.Serialization(ts))
+	fmt.Fprint(wr, formatter.Deserialization(ts))
 
 	fmt.Fprintln(outputFile, "}")
 	fmt.Fprintln(outputFile, "")

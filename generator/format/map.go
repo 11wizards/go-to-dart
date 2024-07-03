@@ -35,6 +35,4 @@ func (f *MapFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *MapFormatter) Constructor(fieldName string, _ types.Type) string {
-	return "required this." + fieldName
-}
+var _ TypeFormatter = (*MapFormatter)(nil)
