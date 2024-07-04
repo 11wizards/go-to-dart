@@ -25,10 +25,6 @@ func (f *PointerFormatter) Signature(expr types.Type) string {
 	return fmt.Sprintf("%s?", formatter.Signature(expr))
 }
 
-func (f *PointerFormatter) DefaultValue(_ types.Type) string {
-	return ""
-}
-
 func (f *PointerFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
@@ -36,3 +32,5 @@ func (f *PointerFormatter) Declaration(fieldName string, expr types.Type) string
 func (f *PointerFormatter) Constructor(fieldName string, _ types.Type) string {
 	return "this." + fieldName
 }
+
+var _ TypeFormatter = (*PointerFormatter)(nil)

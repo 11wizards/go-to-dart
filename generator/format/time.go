@@ -23,14 +23,8 @@ func (f *TimeFormatter) Signature(_ types.Type) string {
 	return "DateTime"
 }
 
-func (f *TimeFormatter) DefaultValue(_ types.Type) string {
-	return ""
-}
-
 func (f *TimeFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *TimeFormatter) Constructor(fieldName string, _ types.Type) string {
-	return fmt.Sprintf("required this.%s", fieldName)
-}
+var _ TypeFormatter = (*TimeFormatter)(nil)

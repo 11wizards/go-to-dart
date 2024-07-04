@@ -21,6 +21,8 @@ import (
 var timestampConverterSrc string
 
 func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, imports []string) {
+	fmt.Fprintln(wr, "// ignore_for_file: always_use_package_imports")
+
 	if mode == options.Firestore {
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
@@ -41,16 +43,18 @@ func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, impo
 func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
 	registry := format.NewTypeFormatterRegistry()
 
-	base := format.TypeFormatterBase{Mode: mode}
+	typeFormatterBase := format.TypeFormatterBase{Mode: mode}
 
-	registry.RegisterTypeFormatter(&format.AliasFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.StructFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.TimeFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.PointerFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.ArrayFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&format.MapFormatter{TypeFormatterBase: base})
-	registry.RegisterTypeFormatter(&mo.OptionFormatter{TypeFormatterBase: base})
+	registry.RegisterTypeFormatter(&format.AliasFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.ConcreteStructFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.GenericStructFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.PrimitiveFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.TimeFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.PointerFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.ArrayFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.MapFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.TypeParamsFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&mo.OptionFormatter{TypeFormatterBase: typeFormatterBase})
 
 	return registry
 }
@@ -63,7 +67,7 @@ func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 			continue
 		}
 
-		if typeName, ok := value.(*types.TypeName); ok {
+		if typeName, ok := value.(*types.TypeName); ok && typeName.Exported() {
 			registry.KnownTypes[typeName.Type()] = struct{}{}
 		}
 	}
@@ -78,7 +82,7 @@ func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 			continue
 		}
 
-		if typeName, ok := value.(*types.TypeName); ok {
+		if typeName, ok := value.(*types.TypeName); ok && typeName.Exported() {
 			if structType, ok := typeName.Type().Underlying().(*types.Struct); ok {
 				list = append(list, struct {
 					TypeName   *types.TypeName

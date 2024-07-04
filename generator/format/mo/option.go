@@ -32,14 +32,14 @@ func (f *OptionFormatter) Signature(expr types.Type) string {
 	return fmt.Sprintf("%s?", formatter.Signature(expr))
 }
 
-func (f *OptionFormatter) DefaultValue(_ types.Type) string {
-	return ""
-}
-
 func (f *OptionFormatter) Declaration(fieldName string, expr types.Type) string {
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
 func (f *OptionFormatter) Constructor(fieldName string, _ types.Type) string {
 	return "this." + fieldName
+}
+
+func (f *OptionFormatter) Name(expr *types.TypeName) string {
+	return expr.Name()
 }

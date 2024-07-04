@@ -1,3 +1,4 @@
+// ignore_for_file: always_use_package_imports
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.go.g.dart';
