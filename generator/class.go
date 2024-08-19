@@ -5,16 +5,38 @@ import (
 	"go/types"
 	"io"
 
+	"github.com/openconfig/goyang/pkg/indent"
+
 	"github.com/11wizards/go-to-dart/generator/format"
 	"github.com/11wizards/go-to-dart/generator/options"
-	"github.com/openconfig/goyang/pkg/indent"
 )
 
-func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
+type fieldProjection struct {
+	field *types.Var
+	tag   string
+}
+
+func extractFields(st *types.Struct) []fieldProjection {
+	var fields []fieldProjection
 	for i := 0; i < st.NumFields(); i++ {
 		field := st.Field(i)
+		if field.Embedded() {
+			if embedStruct, ok := field.Type().Underlying().(*types.Struct); ok {
+				embeddedFields := extractFields(embedStruct)
+				fields = append(fields, embeddedFields...)
+				continue
+			}
+		}
 		tag := st.Tag(i)
-		generateFieldDeclaration(wr, field, tag, registry, mode)
+		fields = append(fields, fieldProjection{field, tag})
+	}
+	return fields
+}
+
+func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
+	fields := extractFields(st)
+	for _, field := range fields {
+		generateFieldDeclaration(wr, field.field, field.tag, registry, mode)
 		fmt.Fprintln(wr, ";")
 	}
 	fmt.Fprintln(wr)
@@ -23,11 +45,11 @@ func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatt
 func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry) {
 	fmt.Fprintf(wr, "%s(", ts.Name())
 
-	if st.NumFields() > 0 {
+	fields := extractFields(st)
+	if len(fields) > 0 {
 		fmt.Fprintln(wr, "{")
-		for i := 0; i < st.NumFields(); i++ {
-			f := st.Field(i)
-			generateFieldConstrutor(indent.NewWriter(wr, "\t"), f, registry)
+		for _, field := range fields {
+			generateFieldConstrutor(indent.NewWriter(wr, "\t"), field.field, registry)
 			fmt.Fprintln(wr, ",")
 		}
 		fmt.Fprint(wr, "}")
@@ -37,6 +59,7 @@ func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, reg
 	fmt.Fprintln(wr)
 	fmt.Fprintln(wr)
 }
+
 func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
 	formatter, ok := registry.GetTypeFormatter(ts.Type()).(format.StructFormatter)
 	if !ok {

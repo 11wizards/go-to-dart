@@ -7,8 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/11wizards/go-to-dart/generator/options"
 	"github.com/stretchr/testify/require"
+
+	"github.com/11wizards/go-to-dart/generator/options"
 )
 
 func runAndCompare(t *testing.T, input string, mode options.Mode) {
@@ -64,4 +65,8 @@ func TestMultipackage(t *testing.T) {
 
 func TestGenerics(t *testing.T) {
 	runAndCompare(t, "./examples/generics", options.JSON)
+}
+
+func TestEmbedded(t *testing.T) {
+	runAndCompare(t, "./examples/embedded", options.JSON)
 }
