@@ -1,14 +1,15 @@
 // ignore_for_file: always_use_package_imports
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'everything.go.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Child {
+class Child extends Equatable {
 	final int id;
 	final String name;
 	
-	Child({
+	const Child({
 		required this.id,
 		required this.name,
 	});
@@ -16,20 +17,29 @@ class Child {
 	Map<String, dynamic> toJson() => _$ChildToJson(this);
 	
 	factory Child.fromJson(Map<String, dynamic> json) => _$ChildFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+	];
 }
 
 @JsonSerializable(explicitToJson: true)
-class Empty {
+class Empty extends Equatable {
 	
-	Empty();
+	const Empty();
 	
 	Map<String, dynamic> toJson() => _$EmptyToJson(this);
 	
 	factory Empty.fromJson(Map<String, dynamic> json) => _$EmptyFromJson(json);
+	
+	@override
+	List<Object?> get props => [];
 }
 
 @JsonSerializable(explicitToJson: true)
-class Parent {
+class Parent extends Equatable {
 	final String id;
 	final int number1;
 	@JsonKey(defaultValue: <List<int>>[])final List<int> number2;
@@ -63,7 +73,7 @@ class Parent {
 	@JsonKey(defaultValue: <int, Child>{}, name: "map2_weird_name")final Map<int, Child> map2;
 	@JsonKey(name: "empty")final Empty empty1;
 	
-	Parent({
+	const Parent({
 		required this.id,
 		required this.number1,
 		required this.number2,
@@ -101,5 +111,41 @@ class Parent {
 	Map<String, dynamic> toJson() => _$ParentToJson(this);
 	
 	factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		number1,
+		number2,
+		number3,
+		number4,
+		number5,
+		number6,
+		number7,
+		text1,
+		text2,
+		text3,
+		text4,
+		text5,
+		text6,
+		text7,
+		date1,
+		date2,
+		date3,
+		date4,
+		date5,
+		date6,
+		date7,
+		child1,
+		child2,
+		child3,
+		child4,
+		child5,
+		child6,
+		child7,
+		map1,
+		map2,
+		empty1,
+	];
 }
 
