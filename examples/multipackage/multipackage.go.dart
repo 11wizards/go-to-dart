@@ -1,5 +1,6 @@
 // ignore_for_file: always_use_package_imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'multipackage.go.g.dart';
@@ -16,11 +17,11 @@ class _TimestampConverter implements JsonConverter<DateTime, Timestamp> {
 
 @JsonSerializable(explicitToJson: true)
 @_TimestampConverter()
-class Outer {
+class Outer extends Equatable {
 	final String? id;
 	final String name;
 	
-	Outer({
+	const Outer({
 		this.id,
 		required this.name,
 	});
@@ -28,5 +29,11 @@ class Outer {
 	Map<String, dynamic> toJson() => _$OuterToJson(this);
 	
 	factory Outer.fromJson(Map<String, dynamic> json) => _$OuterFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+	];
 }
 

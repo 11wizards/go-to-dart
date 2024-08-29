@@ -1,5 +1,6 @@
 // ignore_for_file: always_use_package_imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'firestore.go.g.dart';
@@ -16,7 +17,7 @@ class _TimestampConverter implements JsonConverter<DateTime, Timestamp> {
 
 @JsonSerializable(explicitToJson: true)
 @_TimestampConverter()
-class User {
+class User extends Equatable {
 	final int id;
 	final String name;
 	final String email;
@@ -27,7 +28,7 @@ class User {
 	@JsonKey(defaultValue: <String, String>{})final Map<String, String> options;
 	@JsonKey(defaultValue: <List<String>>[])final List<String> tags;
 	
-	User({
+	const User({
 		required this.id,
 		required this.name,
 		required this.email,
@@ -42,5 +43,18 @@ class User {
 	Map<String, dynamic> toJson() => _$UserToJson(this);
 	
 	factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+		email,
+		password,
+		createdAt,
+		updatedAt,
+		deletedAt,
+		options,
+		tags,
+	];
 }
 

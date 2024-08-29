@@ -1,15 +1,16 @@
 // ignore_for_file: always_use_package_imports
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.go.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Address {
+class Address extends Equatable {
 	@JsonKey(name: "street_line_1")final String street;
 	@JsonKey(name: "City")final String city;
 	@JsonKey(name: "State")final String state;
 	
-	Address({
+	const Address({
 		required this.street,
 		required this.city,
 		required this.state,
@@ -18,10 +19,17 @@ class Address {
 	Map<String, dynamic> toJson() => _$AddressToJson(this);
 	
 	factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		street,
+		city,
+		state,
+	];
 }
 
 @JsonSerializable(explicitToJson: true)
-class Profile {
+class Profile extends Equatable {
 	@JsonKey(name: "ID")final int id;
 	@JsonKey(name: "full_name")final String name;
 	@JsonKey(name: "Email")final String email;
@@ -29,7 +37,7 @@ class Profile {
 	@JsonKey(name: "City")final String city;
 	@JsonKey(name: "State")final String state;
 	
-	Profile({
+	const Profile({
 		required this.id,
 		required this.name,
 		required this.email,
@@ -41,10 +49,20 @@ class Profile {
 	Map<String, dynamic> toJson() => _$ProfileToJson(this);
 	
 	factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+		email,
+		street,
+		city,
+		state,
+	];
 }
 
 @JsonSerializable(explicitToJson: true)
-class User {
+class User extends Equatable {
 	@JsonKey(name: "ID")final int id;
 	@JsonKey(name: "full_name")final String name;
 	@JsonKey(name: "Email")final String email;
@@ -58,7 +76,7 @@ class User {
 	@JsonKey(defaultValue: <String, String>{}, name: "Options")final Map<String, String> options;
 	@JsonKey(defaultValue: <List<String>>[], name: "Tags")final List<String> tags;
 	
-	User({
+	const User({
 		required this.id,
 		required this.name,
 		required this.email,
@@ -76,5 +94,21 @@ class User {
 	Map<String, dynamic> toJson() => _$UserToJson(this);
 	
 	factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+		email,
+		street,
+		city,
+		state,
+		password,
+		createdAt,
+		updatedAt,
+		deletedAt,
+		options,
+		tags,
+	];
 }
 

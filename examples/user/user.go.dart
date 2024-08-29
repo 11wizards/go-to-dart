@@ -1,10 +1,11 @@
 // ignore_for_file: always_use_package_imports
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.go.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class User {
+class User extends Equatable {
 	@JsonKey(name: "ID")final int id;
 	@JsonKey(name: "Name")final String name;
 	@JsonKey(name: "Email")final String email;
@@ -15,7 +16,7 @@ class User {
 	@JsonKey(defaultValue: <String, String>{}, name: "Options")final Map<String, String> options;
 	@JsonKey(defaultValue: <List<String>>[], name: "Tags")final List<String> tags;
 	
-	User({
+	const User({
 		required this.id,
 		required this.name,
 		required this.email,
@@ -30,5 +31,18 @@ class User {
 	Map<String, dynamic> toJson() => _$UserToJson(this);
 	
 	factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+		email,
+		password,
+		createdAt,
+		updatedAt,
+		deletedAt,
+		options,
+		tags,
+	];
 }
 
