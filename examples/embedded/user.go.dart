@@ -1,9 +1,11 @@
 // ignore_for_file: always_use_package_imports
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.go.g.dart';
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class Address extends Equatable {
 	@JsonKey(name: "street_line_1")final String street;
@@ -28,6 +30,7 @@ class Address extends Equatable {
 	];
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class Profile extends Equatable {
 	@JsonKey(name: "ID")final int id;
@@ -61,6 +64,7 @@ class Profile extends Equatable {
 	];
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class User extends Equatable {
 	@JsonKey(name: "ID")final int id;

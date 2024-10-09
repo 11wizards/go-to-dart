@@ -1,5 +1,6 @@
 // ignore_for_file: always_use_package_imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -15,6 +16,7 @@ class _TimestampConverter implements JsonConverter<DateTime, Timestamp> {
   Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 @_TimestampConverter()
 class User extends Equatable {

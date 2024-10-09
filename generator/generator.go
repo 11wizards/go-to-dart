@@ -27,6 +27,7 @@ func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, impo
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
 
+	fmt.Fprint(wr, "import 'package:copy_with_extension/copy_with_extension.dart';\n")
 	fmt.Fprint(wr, "import 'package:equatable/equatable.dart';\n")
 	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n")
 	for _, imp := range imports {

@@ -1,9 +1,11 @@
 // ignore_for_file: always_use_package_imports
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'everything.go.g.dart';
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class Child extends Equatable {
 	final int id;
@@ -38,6 +40,7 @@ class Empty extends Equatable {
 	List<Object?> get props => [];
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class Parent extends Equatable {
 	final String id;
