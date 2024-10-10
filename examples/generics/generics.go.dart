@@ -1,9 +1,11 @@
 // ignore_for_file: always_use_package_imports
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'generics.go.g.dart';
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class Instance extends Equatable {
 	final Map<String, int> m;
@@ -22,6 +24,7 @@ class Instance extends Equatable {
 	];
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true, genericArgumentFactories: true)
 class KeyValuePair<TKey, TValue> extends Equatable {
 	final TKey key;
@@ -43,6 +46,7 @@ class KeyValuePair<TKey, TValue> extends Equatable {
 	];
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true, genericArgumentFactories: true)
 class Map<TKey, TValue> extends Equatable {
 	@JsonKey(defaultValue: <List<KeyValuePair<TKey, TValue>>>[])final List<KeyValuePair<TKey, TValue>> items;

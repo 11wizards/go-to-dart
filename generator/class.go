@@ -33,8 +33,7 @@ func extractFields(st *types.Struct) []fieldProjection {
 	return fields
 }
 
-func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
-	fields := extractFields(st)
+func generateFields(wr io.Writer, registry *format.TypeFormatterRegistry, mode options.Mode, fields []fieldProjection) {
 	for _, field := range fields {
 		generateFieldDeclaration(wr, field.field, field.tag, registry, mode)
 		fmt.Fprintln(wr, ";")
@@ -42,10 +41,9 @@ func generateFields(wr io.Writer, st *types.Struct, registry *format.TypeFormatt
 	fmt.Fprintln(wr)
 }
 
-func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry) {
+func generateConstructor(wr io.Writer, ts *types.TypeName, registry *format.TypeFormatterRegistry, fields []fieldProjection) {
 	fmt.Fprintf(wr, "const %s(", ts.Name())
 
-	fields := extractFields(st)
 	if len(fields) > 0 {
 		fmt.Fprintln(wr, "{")
 		for _, field := range fields {
@@ -60,15 +58,14 @@ func generateConstructor(wr io.Writer, ts *types.TypeName, st *types.Struct, reg
 	fmt.Fprintln(wr)
 }
 
-func generateEquatable(wr io.Writer, st *types.Struct) {
+func generateEquatable(wr io.Writer, fields []fieldProjection) {
 	fmt.Fprintln(wr, "@override")
 	fmt.Fprint(wr, "List<Object?> get props => [")
-	if st.NumFields() > 0 {
+	if len(fields) > 0 {
 		fmt.Fprintln(wr)
 	}
 
 	iwr := indent.NewWriter(wr, "\t")
-	fields := extractFields(st)
 	for _, field := range fields {
 		fmt.Fprintf(iwr, "%s,\n", format.GetFieldName(field.field))
 	}
@@ -82,6 +79,11 @@ func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struc
 		panic(fmt.Sprintf("expected StructFormatter, got %T", registry.GetTypeFormatter(ts.Type())))
 	}
 
+	fields := extractFields(st)
+
+	if len(fields) > 0 {
+		fmt.Fprintln(outputFile, "@CopyWith()")
+	}
 	fmt.Fprintln(outputFile, formatter.Annotation(ts))
 	if mode == options.Firestore {
 		fmt.Fprintln(outputFile, "@_TimestampConverter()")
@@ -90,11 +92,11 @@ func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struc
 
 	wr := indent.NewWriter(outputFile, "\t")
 
-	generateFields(wr, st, registry, mode)
-	generateConstructor(wr, ts, st, registry)
+	generateFields(wr, registry, mode, fields)
+	generateConstructor(wr, ts, registry, fields)
 	fmt.Fprint(wr, formatter.Serialization(ts))
 	fmt.Fprintln(wr, formatter.Deserialization(ts))
-	generateEquatable(wr, st)
+	generateEquatable(wr, fields)
 
 	fmt.Fprintln(outputFile, "}")
 	fmt.Fprintln(outputFile, "")
