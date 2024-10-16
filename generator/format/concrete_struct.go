@@ -23,6 +23,10 @@ func (f *ConcreteStructFormatter) CanFormat(expr types.Type) bool {
 }
 
 func (f *ConcreteStructFormatter) Signature(expr types.Type) string {
+	if f.Options.Prefix != "" && f.Registry.IsKnownNamedType(expr.(*types.Named)) {
+		return fmt.Sprintf("%s%s", f.Options.Prefix, expr.(*types.Named).Obj().Name())
+	}
+
 	return expr.(*types.Named).Obj().Name()
 }
 
@@ -34,12 +38,12 @@ func (f *ConcreteStructFormatter) Name(expr *types.TypeName) string {
 	return f.Signature(expr.Type())
 }
 
-func (t *ConcreteStructFormatter) Serialization(expr *types.TypeName) string {
-	return fmt.Sprintf("Map<String, dynamic> toJson() => _$%sToJson(this);\n\n", expr.Name())
+func (f *ConcreteStructFormatter) Serialization(expr *types.TypeName) string {
+	return fmt.Sprintf("Map<String, dynamic> toJson() => _$%sToJson(this);\n\n", f.Signature(expr.Type()))
 }
 
-func (t *ConcreteStructFormatter) Deserialization(expr *types.TypeName) string {
-	return fmt.Sprintf("factory %s.fromJson(Map<String, dynamic> json) => _$%sFromJson(json);\n", expr.Name(), expr.Name())
+func (f *ConcreteStructFormatter) Deserialization(expr *types.TypeName) string {
+	return fmt.Sprintf("factory %s.fromJson(Map<String, dynamic> json) => _$%sFromJson(json);\n", f.Signature(expr.Type()), f.Signature(expr.Type()))
 }
 
 func (t *ConcreteStructFormatter) Annotation(expr *types.TypeName) string {

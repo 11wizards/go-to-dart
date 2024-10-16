@@ -33,9 +33,9 @@ func extractFields(st *types.Struct) []fieldProjection {
 	return fields
 }
 
-func generateFields(wr io.Writer, registry *format.TypeFormatterRegistry, mode options.Mode, fields []fieldProjection) {
+func generateFields(wr io.Writer, registry *format.TypeFormatterRegistry, opts options.Options, fields []fieldProjection) {
 	for _, field := range fields {
-		generateFieldDeclaration(wr, field.field, field.tag, registry, mode)
+		generateFieldDeclaration(wr, field.field, field.tag, registry, opts)
 		fmt.Fprintln(wr, ";")
 	}
 	fmt.Fprintln(wr)
@@ -73,7 +73,7 @@ func generateEquatable(wr io.Writer, fields []fieldProjection) {
 	fmt.Fprintln(wr, "];")
 }
 
-func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry, mode options.Mode) {
+func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struct, registry *format.TypeFormatterRegistry, opts options.Options) {
 	formatter, ok := registry.GetTypeFormatter(ts.Type()).(format.StructFormatter)
 	if !ok {
 		panic(fmt.Sprintf("expected StructFormatter, got %T", registry.GetTypeFormatter(ts.Type())))
@@ -85,14 +85,14 @@ func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struc
 		fmt.Fprintln(outputFile, "@CopyWith()")
 	}
 	fmt.Fprintln(outputFile, formatter.Annotation(ts))
-	if mode == options.Firestore {
+	if opts.Mode == options.Firestore {
 		fmt.Fprintln(outputFile, "@_TimestampConverter()")
 	}
 	fmt.Fprintf(outputFile, "class %s extends Equatable {\n", formatter.Name(ts))
 
 	wr := indent.NewWriter(outputFile, "\t")
 
-	generateFields(wr, registry, mode, fields)
+	generateFields(wr, registry, opts, fields)
 	generateConstructor(wr, ts, registry, fields)
 	fmt.Fprint(wr, formatter.Serialization(ts))
 	fmt.Fprintln(wr, formatter.Deserialization(ts))

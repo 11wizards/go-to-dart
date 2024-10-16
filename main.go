@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var input, output, mode string
+var input, output, mode, prefix string
 var imports []string
 
 var rootCmd = &cobra.Command{
@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
 			Output:  output,
 			Imports: imports,
 			Mode:    options.Mode(mode),
+			Prefix:  prefix,
 		}
 
 		if o.Mode != options.JSON && o.Mode != options.Firestore {
@@ -36,7 +37,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&output, "output", "o", "", "Output directory to write to")
 	rootCmd.PersistentFlags().StringVarP(&mode, "mode", "m", "json", "Mode to run in: json or firestore")
 	rootCmd.PersistentFlags().StringSliceVarP(&imports, "imports", "p", []string{}, "Additional imports to add to the generated file")
-
+	rootCmd.PersistentFlags().StringVarP(&prefix, "prefix", "x", "", "Prefix to add to the generated types")
 	if err := rootCmd.MarkPersistentFlagRequired("input"); err != nil {
 		panic(err)
 	}
