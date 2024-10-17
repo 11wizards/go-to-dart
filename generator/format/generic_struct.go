@@ -43,8 +43,12 @@ func (f *GenericStructFormatter) Declaration(fieldName string, expr types.Type) 
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *GenericStructFormatter) Name(expr *types.TypeName) string {
-	return f.Signature(expr.Type())
+func (f *GenericStructFormatter) Name(expr *types.TypeName, includeTypeParams bool) string {
+	if includeTypeParams {
+		return f.Signature(expr.Type())
+	}
+
+	return f.nameWithoutTypeParams(expr.Type())
 }
 
 func (f *GenericStructFormatter) Serialization(expr *types.TypeName) string {

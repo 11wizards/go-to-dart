@@ -10,7 +10,7 @@ part 'prefix.go.g.dart';
 class MyInstance extends Equatable {
 	final MyMap<String, int> m;
 	
-	const Instance({
+	const MyInstance({
 		required this.m,
 	});
 	
@@ -30,7 +30,7 @@ class MyKeyValuePair<TKey, TValue> extends Equatable {
 	final TKey key;
 	final TValue value;
 	
-	const KeyValuePair({
+	const MyKeyValuePair({
 		required this.key,
 		required this.value,
 	});
@@ -51,7 +51,7 @@ class MyKeyValuePair<TKey, TValue> extends Equatable {
 class MyMap<TKey, TValue> extends Equatable {
 	@JsonKey(defaultValue: <List<MyKeyValuePair<TKey, TValue>>>[])final List<MyKeyValuePair<TKey, TValue>> items;
 	
-	const Map({
+	const MyMap({
 		required this.items,
 	});
 	
@@ -70,7 +70,7 @@ class MyMap<TKey, TValue> extends Equatable {
 class MyUserRepository extends Equatable {
 	@JsonKey(defaultValue: <List<User>>[])final List<User> users;
 	
-	const UserRepository({
+	const MyUserRepository({
 		required this.users,
 	});
 	

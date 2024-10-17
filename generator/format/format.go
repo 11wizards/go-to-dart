@@ -35,7 +35,7 @@ func (f *TypeFormatterBase) Constructor(fieldName string, _ types.Type) string {
 
 type StructFormatter interface {
 	TypeFormatter
-	Name(expr *types.TypeName) string
+	Name(expr *types.TypeName, includeTypeParams bool) string
 	Serialization(expr *types.TypeName) string
 	Deserialization(expr *types.TypeName) string
 	Annotation(expr *types.TypeName) string
