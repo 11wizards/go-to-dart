@@ -11,10 +11,10 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func generateFieldJSONKey(writer io.Writer, f *types.Var, tag string, registry *format.TypeFormatterRegistry, mode options.Mode) format.TypeFormatter {
+func generateFieldJSONKey(writer io.Writer, f *types.Var, tag string, registry *format.TypeFormatterRegistry, opts options.Options) format.TypeFormatter {
 	formatter := registry.GetTypeFormatter(f.Type())
 	fieldName := format.GetFieldName(f)
-	jsonFieldName := format.GetJSONFieldName(tag, mode)
+	jsonFieldName := format.GetJSONFieldName(tag, opts.Mode)
 
 	keyProperties := map[string]string{}
 
@@ -53,8 +53,8 @@ func generateFieldJSONKey(writer io.Writer, f *types.Var, tag string, registry *
 	return formatter
 }
 
-func generateFieldDeclaration(writer io.Writer, f *types.Var, tag string, registry *format.TypeFormatterRegistry, mode options.Mode) {
-	formatter := generateFieldJSONKey(writer, f, tag, registry, mode)
+func generateFieldDeclaration(writer io.Writer, f *types.Var, tag string, registry *format.TypeFormatterRegistry, opts options.Options) {
+	formatter := generateFieldJSONKey(writer, f, tag, registry, opts)
 	fmt.Fprintf(writer, "final %s", formatter.Declaration(format.GetFieldName(f), f.Type()))
 }
 

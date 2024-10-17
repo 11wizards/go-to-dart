@@ -18,7 +18,7 @@ type TypeFormatter interface {
 
 type TypeFormatterBase struct {
 	Registry *TypeFormatterRegistry
-	Mode     options.Mode
+	Options  options.Options
 }
 
 func (t *TypeFormatterBase) SetRegistry(registry *TypeFormatterRegistry) {
@@ -42,16 +42,33 @@ type StructFormatter interface {
 }
 
 type TypeFormatterRegistry struct {
-	KnownTypes map[types.Type]struct{}
 	Formatters []TypeFormatter
+
+	knownTypes      map[types.Type]struct{}
+	knownNamedTypes map[string]struct{}
+}
+
+func (t *TypeFormatterRegistry) AddKnownType(typ types.Type) {
+	t.knownTypes[typ] = struct{}{}
+	if namedType, ok := typ.(*types.Named); ok {
+		t.knownNamedTypes[namedType.Obj().Type().String()] = struct{}{}
+	}
+}
+
+func (t *TypeFormatterRegistry) IsKnownNamedType(namedType *types.Named) bool {
+	name := namedType.Obj().Type().String()
+	_, ok := t.knownNamedTypes[name]
+	return ok
 }
 
 func NewTypeFormatterRegistry() *TypeFormatterRegistry {
 	return &TypeFormatterRegistry{
-		KnownTypes: make(map[types.Type]struct{}),
-		Formatters: make([]TypeFormatter, 0),
+		Formatters:      make([]TypeFormatter, 0),
+		knownTypes:      make(map[types.Type]struct{}),
+		knownNamedTypes: make(map[string]struct{}),
 	}
 }
+
 func (t *TypeFormatterRegistry) RegisterTypeFormatter(formatter TypeFormatter) {
 	t.Formatters = append(t.Formatters, formatter)
 	formatter.SetRegistry(t)

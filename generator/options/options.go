@@ -12,4 +12,5 @@ type Options struct {
 	Output  string
 	Imports []string
 	Mode    Mode
+	Prefix  string
 }

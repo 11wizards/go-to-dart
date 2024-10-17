@@ -20,32 +20,32 @@ import (
 //go:embed dart/timestamp_converter.dart
 var timestampConverterSrc string
 
-func generateHeader(pkg *packages.Package, wr io.Writer, mode options.Mode, imports []string) {
+func generateHeader(pkg *packages.Package, wr io.Writer, opts options.Options) {
 	fmt.Fprintln(wr, "// ignore_for_file: always_use_package_imports")
 
-	if mode == options.Firestore {
+	if opts.Mode == options.Firestore {
 		fmt.Fprint(wr, "import 'package:cloud_firestore/cloud_firestore.dart';\n")
 	}
 
 	fmt.Fprint(wr, "import 'package:copy_with_extension/copy_with_extension.dart';\n")
 	fmt.Fprint(wr, "import 'package:equatable/equatable.dart';\n")
 	fmt.Fprint(wr, "import 'package:json_annotation/json_annotation.dart';\n")
-	for _, imp := range imports {
+	for _, imp := range opts.Imports {
 		fmt.Fprintf(wr, "import '%s';\n", imp)
 	}
 
 	fmt.Fprintf(wr, "\npart '%s.go.g.dart';\n\n", pkg.Name)
 
-	if mode == options.Firestore {
+	if opts.Mode == options.Firestore {
 		fmt.Fprint(wr, timestampConverterSrc)
 		fmt.Fprint(wr, "\n\n")
 	}
 }
 
-func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
+func createRegistry(options options.Options) *format.TypeFormatterRegistry {
 	registry := format.NewTypeFormatterRegistry()
 
-	typeFormatterBase := format.TypeFormatterBase{Mode: mode}
+	typeFormatterBase := format.TypeFormatterBase{Options: options}
 
 	registry.RegisterTypeFormatter(&format.AliasFormatter{TypeFormatterBase: typeFormatterBase})
 	registry.RegisterTypeFormatter(&format.ConcreteStructFormatter{TypeFormatterBase: typeFormatterBase})
@@ -61,8 +61,8 @@ func createRegistry(mode options.Mode) *format.TypeFormatterRegistry {
 	return registry
 }
 
-func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
-	registry := createRegistry(mode)
+func generateClasses(pkg *packages.Package, wr io.Writer, options options.Options) {
+	registry := createRegistry(options)
 
 	for _, value := range pkg.TypesInfo.Defs {
 		if value == nil {
@@ -70,7 +70,7 @@ func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 		}
 
 		if typeName, ok := value.(*types.TypeName); ok && typeName.Exported() {
-			registry.KnownTypes[typeName.Type()] = struct{}{}
+			registry.AddKnownType(typeName.Type())
 		}
 	}
 
@@ -102,7 +102,7 @@ func generateClasses(pkg *packages.Package, wr io.Writer, mode options.Mode) {
 	})
 
 	for _, item := range list {
-		generateDartClass(wr, item.TypeName, item.StructType, registry, mode)
+		generateDartClass(wr, item.TypeName, item.StructType, registry, options)
 	}
 }
 
@@ -131,17 +131,17 @@ func writeOut(output, outputDartFile string, wr *bytes.Buffer) {
 	fmt.Printf("Processed: %s -> %s\n", outputDartFile, outputFilePath)
 }
 
-func Run(options options.Options) {
-	if abs, err := filepath.Abs(options.Input); err == nil {
-		options.Input = abs
+func Run(opts options.Options) {
+	if abs, err := filepath.Abs(opts.Input); err == nil {
+		opts.Input = abs
 	} else {
 		panic(err)
 	}
 
 	pkgs, err := packages.Load(&packages.Config{
-		Dir:  options.Input,
+		Dir:  opts.Input,
 		Mode: packages.NeedName | packages.NeedFiles | packages.NeedImports | packages.NeedDeps | packages.NeedTypes | packages.NeedSyntax | packages.NeedTypesInfo,
-	}, options.Input)
+	}, opts.Input)
 
 	if err != nil {
 		fmt.Println(err)
@@ -161,8 +161,8 @@ func Run(options options.Options) {
 	for _, pkg := range pkgs {
 		var buf []byte
 		wr := bytes.NewBuffer(buf)
-		generateHeader(pkg, wr, options.Mode, options.Imports)
-		generateClasses(pkg, wr, options.Mode)
-		writeOut(options.Output, fmt.Sprintf("%s.go.dart", pkg.Name), wr)
+		generateHeader(pkg, wr, opts)
+		generateClasses(pkg, wr, opts)
+		writeOut(opts.Output, fmt.Sprintf("%s.go.dart", pkg.Name), wr)
 	}
 }

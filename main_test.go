@@ -12,7 +12,7 @@ import (
 	"github.com/11wizards/go-to-dart/generator/options"
 )
 
-func runAndCompare(t *testing.T, input string, mode options.Mode) {
+func runAndCompare(t *testing.T, input string, opts options.Options) {
 	output := path.Join(os.TempDir(), "go-to-dart-test-output", t.Name())
 
 	if err := os.RemoveAll(output); err != nil {
@@ -20,7 +20,9 @@ func runAndCompare(t *testing.T, input string, mode options.Mode) {
 		return
 	}
 
-	rootCmd.SetArgs([]string{"-i", input, "-o", output, "-m", string(mode)})
+	args := []string{"-i", input, "-o", output, "-m", string(opts.Mode), "-x", opts.Prefix}
+
+	rootCmd.SetArgs(args)
 
 	err := rootCmd.Execute()
 	require.NoError(t, err, "command failed")
@@ -48,25 +50,44 @@ func runAndCompare(t *testing.T, input string, mode options.Mode) {
 }
 
 func TestEverything(t *testing.T) {
-	runAndCompare(t, "./examples/everything", options.JSON)
+	runAndCompare(t, "./examples/everything", options.Options{
+		Mode: options.JSON,
+	})
 }
 
 func TestUser(t *testing.T) {
-	runAndCompare(t, "./examples/user", options.JSON)
+	runAndCompare(t, "./examples/user", options.Options{
+		Mode: options.JSON,
+	})
 }
 
 func TestFirestore(t *testing.T) {
-	runAndCompare(t, "./examples/firestore", options.Firestore)
+	runAndCompare(t, "./examples/firestore", options.Options{
+		Mode: options.Firestore,
+	})
 }
 
 func TestMultipackage(t *testing.T) {
-	runAndCompare(t, "./examples/multipackage", options.Firestore)
+	runAndCompare(t, "./examples/multipackage", options.Options{
+		Mode: options.Firestore,
+	})
 }
 
 func TestGenerics(t *testing.T) {
-	runAndCompare(t, "./examples/generics", options.JSON)
+	runAndCompare(t, "./examples/generics", options.Options{
+		Mode: options.JSON,
+	})
 }
 
 func TestEmbedded(t *testing.T) {
-	runAndCompare(t, "./examples/embedded", options.JSON)
+	runAndCompare(t, "./examples/embedded", options.Options{
+		Mode: options.JSON,
+	})
+}
+
+func TestPrefix(t *testing.T) {
+	runAndCompare(t, "./examples/prefix", options.Options{
+		Mode:   options.JSON,
+		Prefix: "My",
+	})
 }
