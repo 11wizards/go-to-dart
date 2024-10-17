@@ -41,8 +41,8 @@ func generateFields(wr io.Writer, registry *format.TypeFormatterRegistry, opts o
 	fmt.Fprintln(wr)
 }
 
-func generateConstructor(wr io.Writer, ts *types.TypeName, registry *format.TypeFormatterRegistry, fields []fieldProjection) {
-	fmt.Fprintf(wr, "const %s(", ts.Name())
+func generateConstructor(wr io.Writer, ts *types.TypeName, registry *format.TypeFormatterRegistry, fields []fieldProjection, formatter format.StructFormatter) {
+	fmt.Fprintf(wr, "const %s(", formatter.Name(ts, false))
 
 	if len(fields) > 0 {
 		fmt.Fprintln(wr, "{")
@@ -88,12 +88,12 @@ func generateDartClass(outputFile io.Writer, ts *types.TypeName, st *types.Struc
 	if opts.Mode == options.Firestore {
 		fmt.Fprintln(outputFile, "@_TimestampConverter()")
 	}
-	fmt.Fprintf(outputFile, "class %s extends Equatable {\n", formatter.Name(ts))
+	fmt.Fprintf(outputFile, "class %s extends Equatable {\n", formatter.Name(ts, true))
 
 	wr := indent.NewWriter(outputFile, "\t")
 
 	generateFields(wr, registry, opts, fields)
-	generateConstructor(wr, ts, registry, fields)
+	generateConstructor(wr, ts, registry, fields, formatter)
 	fmt.Fprint(wr, formatter.Serialization(ts))
 	fmt.Fprintln(wr, formatter.Deserialization(ts))
 	generateEquatable(wr, fields)

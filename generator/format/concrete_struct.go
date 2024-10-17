@@ -34,7 +34,7 @@ func (f *ConcreteStructFormatter) Declaration(fieldName string, expr types.Type)
 	return fmt.Sprintf("%s %s", f.Signature(expr), fieldName)
 }
 
-func (f *ConcreteStructFormatter) Name(expr *types.TypeName) string {
+func (f *ConcreteStructFormatter) Name(expr *types.TypeName, includeTypeParams bool) string {
 	return f.Signature(expr.Type())
 }
 
