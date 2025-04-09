@@ -45,6 +45,8 @@ type Parent struct {
 	Map2 map[ChildID]Child  `json:"map2_weird_name,omitempty"`
 
 	Empty1 Empty `json:"empty"`
+
+	DynamicMap1 map[string]any `json:"dynamic_map1"`
 }
 
 type Empty struct {

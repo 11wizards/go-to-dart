@@ -57,6 +57,7 @@ func createRegistry(options options.Options) *format.TypeFormatterRegistry {
 	registry.RegisterTypeFormatter(&format.MapFormatter{TypeFormatterBase: typeFormatterBase})
 	registry.RegisterTypeFormatter(&format.TypeParamsFormatter{TypeFormatterBase: typeFormatterBase})
 	registry.RegisterTypeFormatter(&mo.OptionFormatter{TypeFormatterBase: typeFormatterBase})
+	registry.RegisterTypeFormatter(&format.InterfaceFormatter{TypeFormatterBase: typeFormatterBase})
 
 	return registry
 }

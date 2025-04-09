@@ -75,6 +75,7 @@ class Parent extends Equatable {
 	@JsonKey(defaultValue: <String, double>{})final Map<String, double> map1;
 	@JsonKey(defaultValue: <int, Child>{}, name: "map2_weird_name")final Map<int, Child> map2;
 	@JsonKey(name: "empty")final Empty empty1;
+	@JsonKey(defaultValue: <String, Object?>{}, name: "dynamic_map1")final Map<String, Object?> dynamicMap1;
 	
 	const Parent({
 		required this.id,
@@ -109,6 +110,7 @@ class Parent extends Equatable {
 		required this.map1,
 		required this.map2,
 		required this.empty1,
+		required this.dynamicMap1,
 	});
 	
 	Map<String, dynamic> toJson() => _$ParentToJson(this);
@@ -149,6 +151,7 @@ class Parent extends Equatable {
 		map1,
 		map2,
 		empty1,
+		dynamicMap1,
 	];
 }
 
