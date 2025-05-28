@@ -29,23 +29,23 @@ class Class$ extends Equatable {
 
 @CopyWith()
 @JsonSerializable(explicitToJson: true)
-class Interface$ extends Equatable {
+class Interface extends Equatable {
 	final int id;
-	@JsonKey(name: "type")final String type$;
+	final String type;
 	
-	const Interface$({
+	const Interface({
 		required this.id,
-		required this.type$,
+		required this.type,
 	});
 	
-	Map<String, dynamic> toJson() => _$Interface$ToJson(this);
+	Map<String, dynamic> toJson() => _$InterfaceToJson(this);
 	
-	factory Interface$.fromJson(Map<String, dynamic> json) => _$Interface$FromJson(json);
+	factory Interface.fromJson(Map<String, dynamic> json) => _$InterfaceFromJson(json);
 	
 	@override
 	List<Object?> get props => [
 		id,
-		type$,
+		type,
 	];
 }
 
@@ -54,7 +54,7 @@ class Interface$ extends Equatable {
 class TestKeywords extends Equatable {
 	final int id;
 	@JsonKey(name: "class")final String class$;
-	@JsonKey(name: "static")final String static$;
+	final String static;
 	@JsonKey(name: "final")final String final$;
 	@JsonKey(name: "const")final String const$;
 	@JsonKey(name: "var")final String var$;
@@ -78,20 +78,20 @@ class TestKeywords extends Equatable {
 	@JsonKey(name: "null")final String null$;
 	@JsonKey(name: "true")final String true$;
 	@JsonKey(name: "false")final String false$;
-	@JsonKey(name: "async")final String async$;
-	@JsonKey(name: "await")final String await$;
+	final String async;
+	final String await;
 	@JsonKey(name: "yield")final String yield$;
-	@JsonKey(name: "abstract")final String abstract$;
+	final String abstract;
 	@JsonKey(name: "extends")final String extends$;
 	@JsonKey(name: "with")final String with$;
-	@JsonKey(name: "mixin")final String mixin$;
+	final String mixin;
 	@JsonKey(name: "enum")final String enum$;
 	final DateTime createdAt;
 	
 	const TestKeywords({
 		required this.id,
 		required this.class$,
-		required this.static$,
+		required this.static,
 		required this.final$,
 		required this.const$,
 		required this.var$,
@@ -115,13 +115,13 @@ class TestKeywords extends Equatable {
 		required this.null$,
 		required this.true$,
 		required this.false$,
-		required this.async$,
-		required this.await$,
+		required this.async,
+		required this.await,
 		required this.yield$,
-		required this.abstract$,
+		required this.abstract,
 		required this.extends$,
 		required this.with$,
-		required this.mixin$,
+		required this.mixin,
 		required this.enum$,
 		required this.createdAt,
 	});
@@ -134,7 +134,7 @@ class TestKeywords extends Equatable {
 	List<Object?> get props => [
 		id,
 		class$,
-		static$,
+		static,
 		final$,
 		const$,
 		var$,
@@ -158,13 +158,13 @@ class TestKeywords extends Equatable {
 		null$,
 		true$,
 		false$,
-		async$,
-		await$,
+		async,
+		await,
 		yield$,
-		abstract$,
+		abstract,
 		extends$,
 		with$,
-		mixin$,
+		mixin,
 		enum$,
 		createdAt,
 	];

@@ -11,19 +11,14 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-// isDartKeyword checks if a given identifier is a Dart keyword
+// isDartKeyword checks if a given identifier is a Dart keyword that needs escaping
 func isDartKeyword(name string) bool {
 	switch name {
-	// Keywords that can't be used as identifiers at all
-	case "abstract", "as", "assert", "async", "await", "base", "break", "case",
-		"catch", "class", "const", "continue", "covariant", "default", "deferred",
-		"do", "dynamic", "else", "enum", "export", "extends", "extension", "external",
-		"factory", "false", "final", "finally", "for", "Function", "get", "hide",
-		"if", "implements", "import", "in", "interface", "is", "late", "library",
-		"mixin", "new", "null", "of", "on", "operator", "part", "required",
-		"rethrow", "return", "sealed", "set", "show", "static", "super", "switch",
-		"sync", "this", "throw", "true", "try", "type", "typedef", "var", "void",
-		"when", "with", "while", "yield":
+	// Keywords that need to be escaped with $ suffix
+	case "assert", "break", "case", "catch", "class", "const", "continue", "default",
+		"do", "else", "enum", "extends", "false", "final", "finally", "for", "if",
+		"in", "is", "new", "null", "rethrow", "return", "super", "switch", "this",
+		"throw", "true", "try", "var", "void", "with", "while", "yield":
 		return true
 	default:
 		return false
