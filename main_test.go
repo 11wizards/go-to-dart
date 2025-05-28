@@ -91,3 +91,9 @@ func TestPrefix(t *testing.T) {
 		Prefix: "My",
 	})
 }
+
+func TestKeywords(t *testing.T) {
+	runAndCompare(t, "./examples/keywords", options.Options{
+		Mode: options.JSON,
+	})
+}

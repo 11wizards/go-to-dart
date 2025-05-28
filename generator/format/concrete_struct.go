@@ -23,11 +23,11 @@ func (f *ConcreteStructFormatter) CanFormat(expr types.Type) bool {
 }
 
 func (f *ConcreteStructFormatter) Signature(expr types.Type) string {
+	className := expr.(*types.Named).Obj().Name()
 	if f.Options.Prefix != "" && f.Registry.IsKnownNamedType(expr.(*types.Named)) {
-		return fmt.Sprintf("%s%s", f.Options.Prefix, expr.(*types.Named).Obj().Name())
+		className = fmt.Sprintf("%s%s", f.Options.Prefix, className)
 	}
-
-	return expr.(*types.Named).Obj().Name()
+	return escapeDartKeyword(className)
 }
 
 func (f *ConcreteStructFormatter) Declaration(fieldName string, expr types.Type) string {

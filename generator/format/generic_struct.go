@@ -22,12 +22,13 @@ func (f *GenericStructFormatter) under(expr types.Type) types.Type {
 
 func (f *GenericStructFormatter) nameWithoutTypeParams(expr types.Type) string {
 	namedType := expr.(*types.Named)
+	className := namedType.Obj().Name()
 
 	if f.Options.Prefix != "" && f.Registry.IsKnownNamedType(namedType) {
-		return fmt.Sprintf("%s%s", f.Options.Prefix, namedType.Obj().Name())
+		className = fmt.Sprintf("%s%s", f.Options.Prefix, className)
 	}
 
-	return namedType.Obj().Name()
+	return escapeDartKeyword(className)
 }
 
 func (f *GenericStructFormatter) CanFormat(expr types.Type) bool {

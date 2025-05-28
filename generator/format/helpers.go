@@ -11,12 +11,41 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// isDartKeyword checks if a given identifier is a Dart keyword
+func isDartKeyword(name string) bool {
+	switch name {
+	// Keywords that can't be used as identifiers at all
+	case "abstract", "as", "assert", "async", "await", "base", "break", "case",
+		"catch", "class", "const", "continue", "covariant", "default", "deferred",
+		"do", "dynamic", "else", "enum", "export", "extends", "extension", "external",
+		"factory", "false", "final", "finally", "for", "Function", "get", "hide",
+		"if", "implements", "import", "in", "interface", "is", "late", "library",
+		"mixin", "new", "null", "of", "on", "operator", "part", "required",
+		"rethrow", "return", "sealed", "set", "show", "static", "super", "switch",
+		"sync", "this", "throw", "true", "try", "type", "typedef", "var", "void",
+		"when", "with", "while", "yield":
+		return true
+	default:
+		return false
+	}
+}
+
+// escapeDartKeyword escapes a Dart keyword by appending a dollar sign
+func escapeDartKeyword(name string) string {
+	// Check both the original name and its lowercase version
+	if isDartKeyword(name) || isDartKeyword(strings.ToLower(name)) {
+		return name + "$"
+	}
+	return name
+}
+
 func GetFieldName(f *types.Var) string {
 	if f.Anonymous() {
 		panic(fmt.Sprintf("no name for field: %#v", f))
 	}
 
-	return strcase.ToLowerCamel(f.Name())
+	fieldName := strcase.ToLowerCamel(f.Name())
+	return escapeDartKeyword(fieldName)
 }
 
 func GetJSONFieldName(tag string, mode options.Mode) string {

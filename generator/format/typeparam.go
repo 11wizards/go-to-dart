@@ -23,7 +23,7 @@ func (f *TypeParamsFormatter) CanFormat(expr types.Type) bool {
 
 func (f *TypeParamsFormatter) Signature(expr types.Type) string {
 	typeParam := expr.(*types.TypeParam)
-	return typeParam.String()
+	return escapeDartKeyword(typeParam.String())
 }
 
 func (f *TypeParamsFormatter) Declaration(fieldName string, expr types.Type) string {
