@@ -11,39 +11,40 @@ type Class struct {
 // Struct with field names that are Dart keywords
 type TestKeywords struct {
 	ID        int       `json:"id"` // Not a keyword
-	Class     string    `json:"class"`
-	Static    string    `json:"static"`
-	Final     string    `json:"final"`
-	Const     string    `json:"const"`
-	Var       string    `json:"var"`
-	If        string    `json:"if"`
-	Else      string    `json:"else"`
-	For       string    `json:"for"`
-	While     string    `json:"while"`
-	Switch    string    `json:"switch"`
-	Case      string    `json:"case"`
-	Default   string    `json:"default"`
+	Assert    string    `json:"assert"`
 	Break     string    `json:"break"`
-	Continue  string    `json:"continue"`
-	Return    string    `json:"return"`
-	Try       string    `json:"try"`
+	Case      string    `json:"case"`
 	Catch     string    `json:"catch"`
-	Finally   string    `json:"finally"`
-	Throw     string    `json:"throw"`
-	New       string    `json:"new"`
-	This      string    `json:"this"`
-	Super     string    `json:"super"`
-	Null      string    `json:"null"`
-	True      string    `json:"true"`
-	False     string    `json:"false"`
-	Async     string    `json:"async"`
-	Await     string    `json:"await"`
-	Yield     string    `json:"yield"`
-	Abstract  string    `json:"abstract"`
-	Extends   string    `json:"extends"`
-	With      string    `json:"with"`
-	Mixin     string    `json:"mixin"`
+	Class     string    `json:"class"`
+	Const     string    `json:"const"`
+	Continue  string    `json:"continue"`
+	Default   string    `json:"default"`
+	Do        string    `json:"do"`
+	Else      string    `json:"else"`
 	Enum      string    `json:"enum"`
+	Extends   string    `json:"extends"`
+	False     string    `json:"false"`
+	Final     string    `json:"final"`
+	Finally   string    `json:"finally"`
+	For       string    `json:"for"`
+	If        string    `json:"if"`
+	In        string    `json:"in"`
+	Is        string    `json:"is"`
+	New       string    `json:"new"`
+	Null      string    `json:"null"`
+	Rethrow   string    `json:"rethrow"`
+	Return    string    `json:"return"`
+	Super     string    `json:"super"`
+	Switch    string    `json:"switch"`
+	This      string    `json:"this"`
+	Throw     string    `json:"throw"`
+	True      string    `json:"true"`
+	Try       string    `json:"try"`
+	Var       string    `json:"var"`
+	Void      string    `json:"void"`
+	While     string    `json:"while"`
+	With      string    `json:"with"`
+	Yield     string    `json:"yield"`
 	CreatedAt time.Time `json:"createdAt"` // Not a keyword
 }
 

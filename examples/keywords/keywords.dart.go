@@ -53,76 +53,78 @@ class Interface extends Equatable {
 @JsonSerializable(explicitToJson: true)
 class TestKeywords extends Equatable {
 	final int id;
-	@JsonKey(name: "class")final String class$;
-	final String static;
-	@JsonKey(name: "final")final String final$;
-	@JsonKey(name: "const")final String const$;
-	@JsonKey(name: "var")final String var$;
-	@JsonKey(name: "if")final String if$;
-	@JsonKey(name: "else")final String else$;
-	@JsonKey(name: "for")final String for$;
-	@JsonKey(name: "while")final String while$;
-	@JsonKey(name: "switch")final String switch$;
-	@JsonKey(name: "case")final String case$;
-	@JsonKey(name: "default")final String default$;
+	@JsonKey(name: "assert")final String assert$;
 	@JsonKey(name: "break")final String break$;
-	@JsonKey(name: "continue")final String continue$;
-	@JsonKey(name: "return")final String return$;
-	@JsonKey(name: "try")final String try$;
+	@JsonKey(name: "case")final String case$;
 	@JsonKey(name: "catch")final String catch$;
-	@JsonKey(name: "finally")final String finally$;
-	@JsonKey(name: "throw")final String throw$;
-	@JsonKey(name: "new")final String new$;
-	@JsonKey(name: "this")final String this$;
-	@JsonKey(name: "super")final String super$;
-	@JsonKey(name: "null")final String null$;
-	@JsonKey(name: "true")final String true$;
-	@JsonKey(name: "false")final String false$;
-	final String async;
-	final String await;
-	@JsonKey(name: "yield")final String yield$;
-	final String abstract;
-	@JsonKey(name: "extends")final String extends$;
-	@JsonKey(name: "with")final String with$;
-	final String mixin;
+	@JsonKey(name: "class")final String class$;
+	@JsonKey(name: "const")final String const$;
+	@JsonKey(name: "continue")final String continue$;
+	@JsonKey(name: "default")final String default$;
+	@JsonKey(name: "do")final String do$;
+	@JsonKey(name: "else")final String else$;
 	@JsonKey(name: "enum")final String enum$;
+	@JsonKey(name: "extends")final String extends$;
+	@JsonKey(name: "false")final String false$;
+	@JsonKey(name: "final")final String final$;
+	@JsonKey(name: "finally")final String finally$;
+	@JsonKey(name: "for")final String for$;
+	@JsonKey(name: "if")final String if$;
+	@JsonKey(name: "in")final String in$;
+	@JsonKey(name: "is")final String is$;
+	@JsonKey(name: "new")final String new$;
+	@JsonKey(name: "null")final String null$;
+	@JsonKey(name: "rethrow")final String rethrow$;
+	@JsonKey(name: "return")final String return$;
+	@JsonKey(name: "super")final String super$;
+	@JsonKey(name: "switch")final String switch$;
+	@JsonKey(name: "this")final String this$;
+	@JsonKey(name: "throw")final String throw$;
+	@JsonKey(name: "true")final String true$;
+	@JsonKey(name: "try")final String try$;
+	@JsonKey(name: "var")final String var$;
+	@JsonKey(name: "void")final String void$;
+	@JsonKey(name: "while")final String while$;
+	@JsonKey(name: "with")final String with$;
+	@JsonKey(name: "yield")final String yield$;
 	final DateTime createdAt;
 	
 	const TestKeywords({
 		required this.id,
-		required this.class$,
-		required this.static,
-		required this.final$,
-		required this.const$,
-		required this.var$,
-		required this.if$,
-		required this.else$,
-		required this.for$,
-		required this.while$,
-		required this.switch$,
-		required this.case$,
-		required this.default$,
+		required this.assert$,
 		required this.break$,
-		required this.continue$,
-		required this.return$,
-		required this.try$,
+		required this.case$,
 		required this.catch$,
-		required this.finally$,
-		required this.throw$,
-		required this.new$,
-		required this.this$,
-		required this.super$,
-		required this.null$,
-		required this.true$,
-		required this.false$,
-		required this.async,
-		required this.await,
-		required this.yield$,
-		required this.abstract,
-		required this.extends$,
-		required this.with$,
-		required this.mixin,
+		required this.class$,
+		required this.const$,
+		required this.continue$,
+		required this.default$,
+		required this.do$,
+		required this.else$,
 		required this.enum$,
+		required this.extends$,
+		required this.false$,
+		required this.final$,
+		required this.finally$,
+		required this.for$,
+		required this.if$,
+		required this.in$,
+		required this.is$,
+		required this.new$,
+		required this.null$,
+		required this.rethrow$,
+		required this.return$,
+		required this.super$,
+		required this.switch$,
+		required this.this$,
+		required this.throw$,
+		required this.true$,
+		required this.try$,
+		required this.var$,
+		required this.void$,
+		required this.while$,
+		required this.with$,
+		required this.yield$,
 		required this.createdAt,
 	});
 	
@@ -133,39 +135,40 @@ class TestKeywords extends Equatable {
 	@override
 	List<Object?> get props => [
 		id,
-		class$,
-		static,
-		final$,
-		const$,
-		var$,
-		if$,
-		else$,
-		for$,
-		while$,
-		switch$,
-		case$,
-		default$,
+		assert$,
 		break$,
-		continue$,
-		return$,
-		try$,
+		case$,
 		catch$,
-		finally$,
-		throw$,
-		new$,
-		this$,
-		super$,
-		null$,
-		true$,
-		false$,
-		async,
-		await,
-		yield$,
-		abstract,
-		extends$,
-		with$,
-		mixin,
+		class$,
+		const$,
+		continue$,
+		default$,
+		do$,
+		else$,
 		enum$,
+		extends$,
+		false$,
+		final$,
+		finally$,
+		for$,
+		if$,
+		in$,
+		is$,
+		new$,
+		null$,
+		rethrow$,
+		return$,
+		super$,
+		switch$,
+		this$,
+		throw$,
+		true$,
+		try$,
+		var$,
+		void$,
+		while$,
+		with$,
+		yield$,
 		createdAt,
 	];
 }
