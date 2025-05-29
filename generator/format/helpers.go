@@ -11,12 +11,36 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// isDartKeyword checks if a given identifier is a Dart keyword that needs escaping
+func isDartKeyword(name string) bool {
+	switch name {
+	// Keywords that need to be escaped with $ suffix
+	case "assert", "break", "case", "catch", "class", "const", "continue", "default",
+		"do", "else", "enum", "extends", "false", "final", "finally", "for", "if",
+		"in", "is", "new", "null", "rethrow", "return", "super", "switch", "this",
+		"throw", "true", "try", "var", "void", "with", "while", "yield":
+		return true
+	default:
+		return false
+	}
+}
+
+// escapeDartKeyword escapes a Dart keyword by appending a dollar sign
+func escapeDartKeyword(name string) string {
+	// Check both the original name and its lowercase version
+	if isDartKeyword(name) || isDartKeyword(strings.ToLower(name)) {
+		return name + "$"
+	}
+	return name
+}
+
 func GetFieldName(f *types.Var) string {
 	if f.Anonymous() {
 		panic(fmt.Sprintf("no name for field: %#v", f))
 	}
 
-	return strcase.ToLowerCamel(f.Name())
+	fieldName := strcase.ToLowerCamel(f.Name())
+	return escapeDartKeyword(fieldName)
 }
 
 func GetJSONFieldName(tag string, mode options.Mode) string {

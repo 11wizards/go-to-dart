@@ -1,0 +1,175 @@
+// ignore_for_file: always_use_package_imports
+import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'keywords.go.g.dart';
+
+@CopyWith()
+@JsonSerializable(explicitToJson: true)
+class Class$ extends Equatable {
+	final int id;
+	final String name;
+	
+	const Class$({
+		required this.id,
+		required this.name,
+	});
+	
+	Map<String, dynamic> toJson() => _$Class$ToJson(this);
+	
+	factory Class$.fromJson(Map<String, dynamic> json) => _$Class$FromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		name,
+	];
+}
+
+@CopyWith()
+@JsonSerializable(explicitToJson: true)
+class Interface extends Equatable {
+	final int id;
+	final String type;
+	
+	const Interface({
+		required this.id,
+		required this.type,
+	});
+	
+	Map<String, dynamic> toJson() => _$InterfaceToJson(this);
+	
+	factory Interface.fromJson(Map<String, dynamic> json) => _$InterfaceFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		type,
+	];
+}
+
+@CopyWith()
+@JsonSerializable(explicitToJson: true)
+class TestKeywords extends Equatable {
+	final int id;
+	@JsonKey(name: "assert")final String assert$;
+	@JsonKey(name: "break")final String break$;
+	@JsonKey(name: "case")final String case$;
+	@JsonKey(name: "catch")final String catch$;
+	@JsonKey(name: "class")final String class$;
+	@JsonKey(name: "const")final String const$;
+	@JsonKey(name: "continue")final String continue$;
+	@JsonKey(name: "default")final String default$;
+	@JsonKey(name: "do")final String do$;
+	@JsonKey(name: "else")final String else$;
+	@JsonKey(name: "enum")final String enum$;
+	@JsonKey(name: "extends")final String extends$;
+	@JsonKey(name: "false")final String false$;
+	@JsonKey(name: "final")final String final$;
+	@JsonKey(name: "finally")final String finally$;
+	@JsonKey(name: "for")final String for$;
+	@JsonKey(name: "if")final String if$;
+	@JsonKey(name: "in")final String in$;
+	@JsonKey(name: "is")final String is$;
+	@JsonKey(name: "new")final String new$;
+	@JsonKey(name: "null")final String null$;
+	@JsonKey(name: "rethrow")final String rethrow$;
+	@JsonKey(name: "return")final String return$;
+	@JsonKey(name: "super")final String super$;
+	@JsonKey(name: "switch")final String switch$;
+	@JsonKey(name: "this")final String this$;
+	@JsonKey(name: "throw")final String throw$;
+	@JsonKey(name: "true")final String true$;
+	@JsonKey(name: "try")final String try$;
+	@JsonKey(name: "var")final String var$;
+	@JsonKey(name: "void")final String void$;
+	@JsonKey(name: "while")final String while$;
+	@JsonKey(name: "with")final String with$;
+	@JsonKey(name: "yield")final String yield$;
+	final DateTime createdAt;
+	
+	const TestKeywords({
+		required this.id,
+		required this.assert$,
+		required this.break$,
+		required this.case$,
+		required this.catch$,
+		required this.class$,
+		required this.const$,
+		required this.continue$,
+		required this.default$,
+		required this.do$,
+		required this.else$,
+		required this.enum$,
+		required this.extends$,
+		required this.false$,
+		required this.final$,
+		required this.finally$,
+		required this.for$,
+		required this.if$,
+		required this.in$,
+		required this.is$,
+		required this.new$,
+		required this.null$,
+		required this.rethrow$,
+		required this.return$,
+		required this.super$,
+		required this.switch$,
+		required this.this$,
+		required this.throw$,
+		required this.true$,
+		required this.try$,
+		required this.var$,
+		required this.void$,
+		required this.while$,
+		required this.with$,
+		required this.yield$,
+		required this.createdAt,
+	});
+	
+	Map<String, dynamic> toJson() => _$TestKeywordsToJson(this);
+	
+	factory TestKeywords.fromJson(Map<String, dynamic> json) => _$TestKeywordsFromJson(json);
+	
+	@override
+	List<Object?> get props => [
+		id,
+		assert$,
+		break$,
+		case$,
+		catch$,
+		class$,
+		const$,
+		continue$,
+		default$,
+		do$,
+		else$,
+		enum$,
+		extends$,
+		false$,
+		final$,
+		finally$,
+		for$,
+		if$,
+		in$,
+		is$,
+		new$,
+		null$,
+		rethrow$,
+		return$,
+		super$,
+		switch$,
+		this$,
+		throw$,
+		true$,
+		try$,
+		var$,
+		void$,
+		while$,
+		with$,
+		yield$,
+		createdAt,
+	];
+}
+
